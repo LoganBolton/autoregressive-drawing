@@ -7,6 +7,7 @@ finished frame holds so the viewer can look at the results.
 
     python3 make_gif.py                                   # the main five
     python3 make_gif.py out/pair.gif --rows qwen3.8-27b gpt-oss-120b
+    python3 make_gif.py out/gpt-6-pro.gif --rows gpt-6-pro
 """
 
 import argparse
@@ -36,7 +37,7 @@ def row(label, folder, logo, subtitle=None):
 
 
 # Every model that can appear, keyed by its drawings/ folder. The label carries
-# the reasoning effort the drawings were made at.
+# the reasoning effort the drawings were made at, when it is available.
 ALL_ROWS = {r.folder.name: r for r in [
     row("Opus 5 (Medium)", "opus", "anthropic.png", "(Maybe Opus 5.2?)"),
     row("Fable 5.1 (Medium)", "fable", "anthropic.png"),
@@ -45,6 +46,7 @@ ALL_ROWS = {r.folder.name: r for r in [
     row("Kimi K3 (Max)", "kimi-k3", "moonshot.png"),
     row("Qwen 3.8 27B (XHigh)", "qwen3.8-27b", "qwen.png"),
     row("GPT-OSS 120B (Medium)", "gpt-oss-120b", "openai.png"),
+    row("GPT-6 Pro", "gpt-6-pro", "openai.png"),
 ]}
 DEFAULT_ROWS = ["opus", "fable", "deepseek-v4.1-flash", "glm-5.3-flash", "kimi-k3"]
 
@@ -79,7 +81,10 @@ def font(size, face="regular"):
     try:
         return ImageFont.truetype(FONT_FILE, size, index=FACES[face])
     except OSError:
-        return ImageFont.load_default()
+        try:
+            return ImageFont.load_default(size=size)
+        except TypeError:  # Pillow before 10.1 has no scalable default font
+            return ImageFont.load_default()
 
 
 def tile_origin(row, col):
