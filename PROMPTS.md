@@ -20,6 +20,10 @@ subject prompt, and save the grid as `drawings/<model>/<file>`.
 >
 > Write the whole grid in a single file-write. Then stop.
 
+`run_models.py` sends the same rules to OpenRouter models, with the last line
+replaced by "Reply with only the 32 lines of the grid. No prose, no code fences."
+so the reply can be parsed directly.
+
 Render with:
 
 ```

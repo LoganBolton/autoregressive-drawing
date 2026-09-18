@@ -1,0 +1,1382 @@
+We need answer user's request: generate 32x32 pixel art plain text only, no prose/code fences. Need produce 32 lines, 32 hex tokens each. Need think carefully. Need final only grid. Need ensure valid 32 tokens per line. Subject: red mushroom with cream stem, mossy forest floor, night sky. We need draw pixel art one pixel at a time, left to right, line by line. No code. We can design in analysis. Need output raw RGB hex.
+
+Need create 32x32 image. Let's define coordinates rows 0 top to 31 bottom, cols 0-31 left to right. Need 32 tokens per row.
+
+Scene: night sky top rows, forest floor/moss bottom rows, mushroom centered maybe. Red cap, cream stem, moss. Could include moon/stars? night sky. But subject main mushroom. Need pixel art aesthetically. We can design manually. Need ensure each row 32 hex. Could use consistent colors:
+Night sky: dark blue #0a102a, #0b1230, #091026, maybe stars #e6e9ff, moon? maybe pale moon top right #e8ecf5 with shadow #c9d2e8.
+Forest floor/moss: dark greens/browns: #123320, #1a4527, #245a33, #2e6b3d, #173a24, dirt #3b2a1c, #523a26, moss highlights #4d8a4b, #6aa85a, maybe pebbles #7a6a58.
+Mushroom: red cap #b81f24, #d63a3f, #f26b6b highlight, dark red #7d1418, underside? cream stem #f4e6c8, #e8d5a8, #cbb58a shadow. Spots? Could have white/cream spots? Red mushroom with cream stem. Cap may have cream spots? Could. Need 32x32 enough.
+
+Let's design a simple composition:
+Rows 0-6: night sky, maybe stars/moon.
+Rows 7-10: darker tree silhouette? Maybe forest floor starts around row 14. But subject mushroom on mossy floor. Need background night sky above horizon, forest floor below horizon. Could have distant trees? maybe simple dark green/black silhouettes in rows 8-13. But user specifically mossy forest floor against night sky. We can keep simple: sky top 12 rows, ground bottom 20 rows.
+
+Let's sketch 32 columns. Use grid mental. Need final 32 lines. To avoid counting errors, I can construct each row as 32 tokens in groups maybe. Need verify count. We can use pattern with repeated tokens? Raw RGB no palette but repetition allowed? It says every pixel is its own #RRGGBB value, not necessarily unique. Repetition ok. Need not run-length shorthand. We can write tokens repeated.
+
+Maybe create systematic rows. Let's decide rows:
+0: sky with star left, moon right.
+1: sky
+2: sky with star
+3: sky
+4: distant tree silhouettes? maybe dark.
+5: sky/horizon trees.
+6: darker trees.
+7: ground horizon dark.
+8-31: moss ground.
+Mushroom centered around cols 12-19, cap rows 9-15, stem rows 15-23? Need ground from row 14? Let's design mushroom larger:
+Cap top row 8? The cap spans cols 11-20, rows 8-13. Stem rows 14-23 cols 14-17. Ground around base rows 22-31.
+
+But if horizon at row 12, cap above horizon? Mushroom on floor, top may extend into sky. That's okay.
+
+Let's create coordinate map. I can use rows with segments and count.
+
+Define colors:
+Sky base S = #0b1026 maybe. Darker #080d1f. Star #e8ecff. Moon #e9edf8, moon shadow #c7d1e6, craters #aeb9d4.
+Tree silhouettes: #071410, #0a1a14.
+Ground base: #12301e, #163a25, #1b462b, #235636, #2d6a44, #3b7d4f, #55955b, #71ad6b. Dirt: #3a2a1d, #533c27, #6b4e33. Pebbles: #8a7a68, #b0a08a.
+Mushroom cap red base #b71f29, dark #8c151d, highlight #e5555b, bright #ff8a8f? cream spots #f6e7c5, #e4cfa0. Underside maybe #6e1117? Stem cream base #f2e4c2, shadow #d7c195, dark #b49a6d, highlight #fff3d6.
+
+Need create row tokens. Could design in a text editor mentally. Since 32x32 = 1024 tokens, large but manageable if systematic. Need avoid counting errors. Could construct each row as 8 groups of 4 tokens. I'll count by group. Use placeholders then replace? Need final hex. I can build each row with 32 tokens by using repeated base color plus features.
+
+Approach: For each row, start with base background and replace specific columns. To ensure count, write row as 32 entries separated by spaces, grouped in 4. Need count manually. Could make rows with mostly one color, easier. But need detailed.
+
+Maybe use a simpler design with large blocks: sky top 8 rows with some stars/moon. Ground bottom 24 rows with moss variations. Mushroom simple: cap 6x10, stem 4x8. Can still be pixel art. Need 32 columns. Use block colors, not too many unique positions.
+
+Let's define a 32x32 matrix with row by row. I can use notation in analysis then convert to final. Need only final. I can create using strings of color initials? But final must hex. I can generate in analysis manually. Need be careful.
+
+Maybe use a coordinate grid 32 columns indexed 0-31. Let's make a plan for each row.
+
+I'll define base row types:
+Sky rows 0-7: mostly S #0b1129. Add moon at top right cols 24-29 rows 2-6? Stars at (1,3), (6,1), (10,5), (17,2), (22,7) etc.
+Ground rows 10-31: base moss #14301e. Variation horizontal bands:
+row10 horizon: dark #0e2417.
+row11: #12301c
+row12: #153621
+row13: #183c26
+row14: #1c432a
+row15: #204a2e
+row16: #245133
+row17: #285938
+row18: #2c603d
+row19: #316843
+row20: #357048
+row21: #3a784e
+row22: #408054
+row23: #46885a
+row24: #4c9060
+row25: #529866
+row26: #58a06c
+row27: #60a872
+row28: #68b078
+row29: #70b87e
+row30: #78c084
+row31: #80c88a
+This gives gradient moss foreground. But maybe too uniform. Can add moss tufts, dirt. But uniform may be okay. Need 32 tokens each row; can fill base. Then overlay mushroom and floor details.
+
+If base rows are single repeated color, count easier. But need features: cap/stem overlay specific columns.
+
+Let's choose horizon at row 10? Sky rows 0-9, ground rows 10-31. Mushroom cap rows 8-16? If cap top row 8 in sky, base ground row 10. Stem rows 17-25. Good.
+
+Let's design mushroom centered cols 13-18? Width 6, cap width 12? For 32x32, cap cols 9-22 width 14, rows 8-16. Stem cols 14-17 width 4, rows 17-25. But cap rows 8-16, stem rows 17-25, base at row 25. Ground below 25. Need moss under base.
+
+Let's make cap shape:
+Row 8: top of cap cols 13-18 (6)
+Row 9: cols 12-19 (8)
+Row 10: cols 11-20 (10)
+Row 11: cols 10-21 (12)
+Row 12: cols 10-21 (12)
+Row 13: cols 9-22 (14)
+Row 14: cols 9-22 (14)
+Row 15: cols 9-22 (14) maybe lower edge
+Row 16: underside? cols 10-21 dark? Or cap bottom row 16 cols 10-21. Stem starts row 17.
+
+Need cap red with highlight top-left, dark bottom-right, cream spots. Could overlay spots at rows 10-15.
+Stem:
+Row 17: cols 14-17
+Row 18: cols 14-17
+Row 19: cols 14-17
+Row 20: cols 14-17
+Row 21: cols 14-17
+Row 22: cols 14-17
+Row 23: cols 14-17
+Row 24: cols 14-17
+Row 25: base wider? cols 13-18 (6) maybe.
+Row 26: ground shadow? maybe cols 13-18 dark moss.
+
+Stem cream with left highlight, right shadow.
+
+Need mossy forest floor: add some tufts/pebbles around. Could include small dark green spots and dirt patch. But if base uniform, we can add features. Need ensure no conflict with stem. Could add small pebbles at left/right, moss highlights.
+
+Need output only 32 lines. I can make final by constructing each row with 32 tokens. Need count. Let's create a spreadsheet mental. I'll use row-by-row with columns 0-31. For each row, I can write base color repeated 32, then modify positions. To count, I can make 4 groups of 8? Let's choose 4 groups of 8 tokens (cols 0-7, 8-15, 16-23, 24-31). This helps count. For each row, write 8 tokens per group. Need final line: group1 8, group2 8, group3 8, group4 8.
+
+Let's assign columns in groups:
+Group A: cols 0-7
+Group B: cols 8-15
+Group C: cols 16-23
+Group D: cols 24-31
+
+Mushroom spans cols 9-22, so groups B/C mostly.
+Cap rows:
+row8: cols13-18 => group B cols13-15 (positions 5-7 in group B? group B cols 8-15: col13=5,14=6,15=7), group C cols16-18 (positions 0-2).
+row9: cols12-19 => group B col12=4,13=5,14=6,15=7; group C col16=0,17=1,18=2,19=3.
+row10: cols11-20 => B col11=3,12=4,13=5,14=6,15=7; C 16-20 = 0-4.
+row11: cols10-21 => B col10=2,11=3,12=4,13=5,14=6,15=7; C 16-21 =0-5.
+row12 same as 11.
+row13-15: cols9-22 => B col9=1,10=2,11=3,12=4,13=5,14=6,15=7; C 16-22=0-6.
+row16: cols10-21 => B col10=2..7; C 0-5.
+
+Stem rows 17-24: cols14-17 => group B col14=6,15=7; group C col16=0,17=1.
+row25 base wider cols13-18: B col13=5,14=6,15=7; C col16=0,17=1,18=2.
+row26 shadow maybe cols13-18 dark ground.
+
+Need base colors per row. Let's define base ground row colors G[row]. Sky row colors SKY maybe #0a1027. Trees? Could add a dark horizon band row 9? If sky rows 0-8? But cap row8 is in sky? Ground row10. Maybe row9 sky/tree horizon. Let's set:
+Rows 0-7: sky #0a1027 with stars/moon.
+Row 8: sky but cap top; maybe still sky.
+Row 9: sky/horizon tree silhouettes dark #06130f? But cap row9 in sky, ok.
+Rows 10-31 ground.
+But cap row10 lies at ground row? row10 ground horizon. The mushroom cap extends into ground? It's on floor, cap above ground. If horizon row10, cap row10 at ground level? Actually floor surface is from row10 down; mushroom cap can be above floor but in 2D cross-section, cap above row10? In pixel art side view, ground horizon at row10, objects on ground have bases lower, tops above horizon. So cap rows 8-16 with base row16, ground behind? The ground background fills row10+ except mushroom. That's okay: cap overlaps ground background in rows10-16. It appears on floor. Good.
+
+Need row 9 maybe sky with tree line. But cap row9 cols12-19. We can include dark trees on sides row9. Maybe simpler: row9 sky all, horizon row10. But night sky should be above ground. Could include a few stars.
+
+Let's create base rows with exact hex:
+Sky: #0b1226 (I'll use SKY)
+Star: #e9edff
+Moon: #eef1fa, #d0d8ea, #b9c3da
+Distant trees: #061410 maybe row9 sides? But if row9 all sky, fine. Could add faint hills #081912 at row9. But cap overlaps.
+Ground base gradient:
+row10: #0f2518 (horizon dark)
+row11: #122b1c
+row12: #153220
+row13: #193a25
+row14: #1d422b
+row15: #214a31
+row16: #265338
+row17: #2b5c3e
+row18: #306545
+row19: #366f4c
+row20: #3c7953
+row21: #42825a
+row22: #488c61
+row23: #4f9668
+row24: #55a06f
+row25: #5baa76
+row26: #62b47d
+row27: #68be84
+row28: #6fc88b
+row29: #76d292
+row30: #7edc99
+row31: #85e6a0
+This is bright moss foreground. Could be okay.
+
+Need add moss variations: maybe in each ground row, add some slightly darker/lighter pixels. But can keep base gradient, plus a few pebbles/dark tufts. Need not too complex but subject. Since final only grid, no explanation. Need ensure row count 32.
+
+Let's build rows. I'll represent each row as 4 groups of 8. I'll use hex tokens. To count, I'll list group tokens. For base repeated, group is 8 same tokens. But final will be long. I can generate by pattern. Need manually write 32 rows, each with 32 tokens. Could be error-prone. Maybe I can use a consistent base and only alter mushroom columns. I can produce line by line with groups.
+
+Let's define color abbreviations for analysis:
+SKY = #0b1226
+STAR = #e9edff
+MOON1 = #eef1fa
+MOON2 = #d0d8ea
+MOON3 = #b9c3da
+TREEDARK = #061410
+G10=#0f2518
+G11=#122b1c
+G12=#153220
+G13=#193a25
+G14=#1d422b
+G15=#214a31
+G16=#265338
+G17=#2b5c3e
+G18=#306545
+G19=#366f4c
+G20=#3c7953
+G21=#42825a
+G22=#488c61
+G23=#4f9668
+G24=#55a06f
+G25=#5baa76
+G26=#62b47d
+G27=#68be84
+G28=#6fc88b
+G29=#76d292
+G30=#7edc99
+G31=#85e6a0
+
+Mushroom cap colors:
+RED_DARK = #8a141c
+RED = #c2202a
+RED_HI = #e85961
+RED_BRIGHT = #ff8f95
+SPOT = #f4e4bf
+SPOT_DARK = #d6bd8f
+UNDER = #5f0e14
+Stem:
+STEM_HI = #fff3d8
+STEM = #f0dfba
+STEM_SH = #d2bb8e
+STEM_DARK = #ad9266
+BASE_DARK = #8a6f49? maybe.
+Shadow ground = darker than row base: use #12301e? For row specific. Could use #1f3f28 etc.
+
+Could simplify cap: use RED base, RED_DARK edges, RED_HI top-left, SPOT cream. Under row16 UNDER.
+
+Let's design cap rows in detail. Need colors per column.
+
+Row8 (cols13-18 cap top): maybe top highlight: col13 RED_HI, col14-17 RED, col18 RED_DARK? But top edge small. Let's do:
+col13 RED_HI (#e85961)
+col14 RED_HI
+col15 RED
+col16 RED
+col17 RED
+col18 RED_DARK
+Row9 (cols12-19): top highlight left, red, dark right, spot maybe.
+col12 RED_HI
+col13 RED_HI
+col14 RED
+col15 RED
+col16 RED
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+Row10 (cols11-20): add cream spot? col13-14 spot? Let's map:
+col11 RED_HI? maybe side highlight
+col12 RED
+col13 SPOT
+col14 SPOT
+col15 RED
+col16 RED
+col17 RED_DARK
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+Row11 (cols10-21): highlight left edge, spots.
+col10 RED_HI
+col11 RED
+col12 RED
+col13 SPOT
+col14 SPOT
+col15 RED
+col16 RED
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+Row12 similar but spot on right? 
+col10 RED_HI
+col11 RED
+col12 RED
+col13 RED
+col14 RED
+col15 SPOT
+col16 SPOT
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+Row13 (cols9-22): lower cap, maybe spots and dark.
+col9 RED_HI
+col10 RED
+col11 RED
+col12 SPOT_DARK? or SPOT
+col13 RED
+col14 RED
+col15 SPOT
+col16 SPOT
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+col22 RED_DARK
+Row14 same as row13 maybe.
+Row15 (cols9-22): bottom edge, darker.
+col9 RED_HI? maybe less, RED
+col10 RED
+col11 RED_DARK
+col12 RED_DARK
+col13 RED_DARK
+col14 RED_DARK
+col15 RED_DARK
+col16 RED_DARK
+col17 RED_DARK
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+col22 RED_DARK
+Row16 underside cols10-21: UNDER #5f0e14, maybe with cream spots? underside could be dark with lighter gill? Use UNDER for all, maybe some SPOT_DARK? But cap underside not necessary. Row16: cols10-21 UNDER. This row also ground base. Cap bottom dark.
+
+But if row15 all dark, cap looks like dark bottom. Could be okay. Maybe row15 should still RED with dark edge: col9-10 RED_HI/RED, col11-21 RED_DARK? Let's do:
+Row15: col9 RED_HI, col10 RED, col11-21 RED_DARK, col22 RED_DARK. Row16 UNDER cols10-21.
+
+Stem rows:
+Base stem cream. Need highlight left, shadow right.
+For cols14-17:
+col14 STEM_HI
+col15 STEM
+col16 STEM
+col17 STEM_SH
+Maybe add darker at bottom.
+Rows17-23 same.
+Row24 maybe col14 STEM_HI, col15 STEM, col16 STEM_SH, col17 STEM_DARK.
+Row25 base wider cols13-18:
+col13 STEM_SH? or stem flare.
+col14 STEM
+col15 STEM
+col16 STEM_SH
+col17 STEM_DARK
+col18 STEM_DARK? Maybe.
+Row26 shadow on ground: darker green under base, cols13-18. Could use row26 base G26 but overlay SHADOW = #428a52? Since G26=#62b47d, shadow darker #3c7953. Use #3c7953.
+
+Need add moss details: Maybe small dark tufts at rows 20-31 not overlapping stem. Could add a few colors: dark moss #1f4a2c, bright moss #9be6a3, dirt #5b432c, pebble #a9977e. But adding many features increases errors. We can add simple horizontal band variations? Base gradient already. Could add a few small dark pixels in corners. But final can be uniform moss. User asked mossy forest floor; gradient green enough? Maybe add some speckles.
+
+Maybe add a dirt patch left of mushroom rows 22-26 cols 4-9, with brown. And a pebble right. But need count. Could incorporate into base rows by replacing specific columns. Let's design a few details:
+- Left dirt patch: rows 22-27, cols 3-8, colors #4d3826, #63492f, #7d5f3c. Maybe too much.
+- Right moss tuft bright: rows 26-30, cols 25-29 bright #92d898, #a8e8ae.
+- Small pebble: row28 cols25-27 #a5947c, #b8a88e.
+But these require modifications. Could do but risk count. Uniform ground may still acceptable. But to make "mossy" maybe need texture. Could add random dark/light spots manually using groups.
+
+Maybe use base rows with 3-4 variation pixels per row, easy. For each ground row, I can set specific group positions to lighter/darker. Need maintain count. Could create row group arrays.
+
+Alternative: create final with all rows base single color plus mushroom, no extra details. It will look like gradient floor. That's fine for pixel art at 32x32. Need night sky: add moon and stars. That's enough.
+
+Let's ensure 32 rows. I'll construct final rows in analysis as group tokens, then final. Need verify counts. I'll write each row with groups separated by maybe newline in analysis. But final one line per row. Need count tokens per group = 8.
+
+I can use repeated tokens. For base row with no features: group = 8 identical. That's easy. For rows with moon/stars, modify group D or A.
+
+Let's design sky rows 0-9.
+Sky base #0b1226. Need moon top right rows 1-5 maybe. Let's make moon 6x5 at cols25-30, rows1-5.
+Moon shape:
+Row1: cols26-29 (4) MOON1? Actually row1 top: 4.
+Row2: cols25-30 (6)
+Row3: cols25-30 (6)
+Row4: cols25-30 (6)
+Row5: cols26-29 (4)
+Add craters: row3 col27 MOON2? row4 col28 MOON3? Let's simple.
+Stars: row0 col5 STAR, col20 STAR? row2 col10 STAR? row3 col15 STAR? row6 col2 STAR? row7 col19 STAR? Need not too many.
+Also maybe distant tree silhouettes row8? Actually row8 sky with cap top. Could add dark tree line row8 sides? But cap row8 cols13-18; tree line maybe row8 cols0-10 and 19-31 dark #061410. That could ground horizon. But if row8 is sky, cap top. Tree line behind mushroom maybe good. Let's set row8: sky base, but cols0-12 and 19-31? If tree line row8 all dark? Then cap top row8 red on dark. But sky above. Maybe horizon at row8? Ground row10? Could have trees row8-9. Let's keep simple: rows0-8 sky, row9 dark tree line? But cap row9 spans cols12-19, tree line behind. Hmm.
+
+Maybe ground horizon at row9: rows0-7 sky, row8 tree line, rows9+ ground? But cap rows8-16. If ground starts row9, mushroom base row16, okay. Let's adjust: ground rows 9-31 (23 rows). Cap rows8-16. Horizon row9. This gives more ground. Sky rows0-7. Moon rows1-5. Stars. Row8 maybe sky with cap top and maybe faint tree line? Could be sky. Let's set ground row9 base G9 maybe #0e2316. Need gradient from row9 to 31. Let's redefine ground rows 9-31 (23 rows). Colors:
+row9: #0f2518 (horizon)
+row10: #122b1c
+row11: #153220
+row12: #193a25
+row13: #1d422b
+row14: #214a31
+row15: #265338
+row16: #2b5c3e
+row17: #306545
+row18: #366f4c
+row19: #3c7953
+row20: #42825a
+row21: #488c61
+row22: #4f9668
+row23: #55a06f
+row24: #5baa76
+row25: #62b47d
+row26: #68be84
+row27: #6fc88b
+row28: #76d292
+row29: #7edc99
+row30: #85e6a0
+row31: #8cf0a7
+Now mushroom cap rows? If ground starts row9, cap row9 is at horizon. Maybe cap rows7-14? Need base at row20? Let's keep cap rows7-14, stem 15-22. But earlier design rows8-16. We can shift up one. Let's choose cap rows7-13, stem 14-21, base 22. More sky. But ground from row9. Let's design coordinates with ground row9.
+
+Maybe simpler: keep previous rows 10 ground but 32 rows total. It's okay if horizon at row10, sky rows0-9 (10 rows). Ground rows10-31 (22 rows). Cap rows8-16. That's fine. Sky 10 rows. Let's stick to original: ground row10, sky row0-9. Cap rows8-16. Good. Row9 can be sky with maybe tree line? The cap row9 overlaps sky. The ground row10 begins just below cap row9; cap lower rows10-16 overlap ground. Good.
+
+Let's use ground rows10-31 as originally.
+
+Now need build rows 0-9 sky with moon/stars. Row9 maybe sky with faint hills? Could include distant dark trees at row9 cols0-11 and 20-31, but cap row9 cols12-19. Let's add tree line row9 to make forest. Row9: cols0-11 and 20-31 TREEDARK #061410; cols12-19 cap. But if ground row10 starts, tree line at horizon behind mushroom. Nice.
+Rows0-8: sky base, moon/stars. Row8: sky base with cap top cols13-18. Could also add stars.
+
+Let's create rows 0-8 with moon.
+Row0: sky, star at col5, col20? group A col5 star, group C col20? group C cols16-23, col20 pos4. Maybe also col28? But moon row0 none. Let's do row0: col5 STAR, col20 STAR.
+Group A cols0-7: positions 0-7. col5 star. Others SKY.
+Group B cols8-15: all SKY.
+Group C cols16-23: col20 pos4 star.
+Group D cols24-31: all SKY.
+Row1: moon top cols26-29. Group D cols24-31: pos0 col24 SKY, pos1 col25 SKY, pos2 col26 MOON1, pos3 col27 MOON1, pos4 col28 MOON1, pos5 col29 MOON1, pos6 col30 SKY, pos7 col31 SKY. Maybe star col8? group B pos0 star. Let's add star col8.
+Row2: moon cols25-30. Group D: col25 pos1 MOON1, 26 pos2, 27 pos3, 28 pos4, 29 pos5, 30 pos6. Maybe star col12. Row2: star col12 (group B pos4). Moon with crater? col27 MOON2? Let's keep simple.
+Row3: moon cols25-30, crater col27 MOON2, maybe star col3? group A pos3.
+Row4: moon cols25-30, crater col28 MOON3, star col17? group C pos1.
+Row5: moon bottom cols26-29, star col23? group C pos7.
+Row6: no moon, stars col2, col18, col27? Maybe.
+Row7: stars col7, col14, col25.
+Row8: cap top cols13-18, maybe star col4. Row8 is sky with cap. Need group B/C modifications.
+
+Row9: tree line plus cap row9. Need group A/B/C/D. Row9 base: tree line dark except cap? Let's define row9:
+cols0-11 TREEDARK, cols12-19 cap, cols20-31 TREEDARK. But group boundaries:
+Group A cols0-7: all TREEDARK.
+Group B cols8-15: col8,9,10,11 TREEDARK; col12-15 cap.
+Group C cols16-23: col16-19 cap; col20-23 TREEDARK.
+Group D cols24-31: TREEDARK.
+Cap row9 colors as above: col12 RED_HI,13 RED_HI,14 RED,15 RED,16 RED,17 RED,18 RED_DARK,19 RED_DARK.
+Need group B: cols8-15 = [T,T,T,T, R_HI, R_HI, R, R] (8)
+Group C: cols16-23 = [R,R,R_D,R_D,T,T,T,T]
+Group A: T x8
+Group D: T x8
+
+Ground rows10-31: base gradient. Need overlay cap rows10-16, stem rows17-25, shadow row26.
+
+Let's define cap row details more concretely with columns and colors.
+I'll create a table for rows 10-16. Use groups.
+Colors abbreviations final hex:
+RED = #c2202a
+RED_DARK = #8a141c
+RED_HI = #e85961
+RED_BRIGHT maybe #ff8f95 (not used maybe)
+SPOT = #f4e4bf
+SPOT_DARK = #d6bd8f
+UNDER = #5f0e14
+Stem:
+STEM_HI = #fff3d8
+STEM = #f0dfba
+STEM_SH = #d2bb8e
+STEM_DARK = #ad9266
+
+Cap shape rows:
+row10: cols11-20
+row11: cols10-21
+row12: cols10-21
+row13: cols9-22
+row14: cols9-22
+row15: cols9-22
+row16: cols10-21 UNDER
+
+Let's assign colors row by row. Need maybe use left highlight, right shadow, spots.
+
+Row10 (cols11-20):
+col11 RED_HI
+col12 RED
+col13 SPOT
+col14 SPOT
+col15 RED
+col16 RED
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+Group B cols8-15: col8 base G10, col9 base, col10 base, col11 RED_HI, col12 RED, col13 SPOT, col14 SPOT, col15 RED.
+Group C cols16-23: col16 RED, col17 RED, col18 RED_DARK, col19 RED_DARK, col20 RED_DARK, col21 base, col22 base, col23 base.
+Group A base, D base.
+
+Row11 (cols10-21):
+col10 RED_HI
+col11 RED
+col12 RED
+col13 SPOT
+col14 SPOT
+col15 RED
+col16 RED
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+Group B: col8 base, col9 base, col10 RED_HI, col11 RED, col12 RED, col13 SPOT, col14 SPOT, col15 RED.
+Group C: col16 RED, col17 RED, col18 RED_DARK, col19 RED_DARK, col20 RED_DARK, col21 RED_DARK, col22 base, col23 base.
+
+Row12 (cols10-21):
+col10 RED_HI
+col11 RED
+col12 RED
+col13 RED
+col14 SPOT
+col15 SPOT
+col16 RED
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+Group B: base, base, RED_HI, RED, RED, SPOT, SPOT, RED.
+Group C: RED, RED, RED_DARK, RED_DARK, RED_DARK, RED_DARK, base, base.
+
+Row13 (cols9-22):
+col9 RED_HI
+col10 RED
+col11 RED
+col12 SPOT
+col13 RED
+col14 RED
+col15 SPOT
+col16 SPOT
+col17 RED
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+col22 RED_DARK
+Group B cols8-15: col8 base, col9 RED_HI, col10 RED, col11 RED, col12 SPOT, col13 RED, col14 RED, col15 SPOT.
+Group C cols16-23: col16 SPOT, col17 RED, col18 RED_DARK, col19 RED_DARK, col20 RED_DARK, col21 RED_DARK, col22 RED_DARK, col23 base.
+
+Row14 (cols9-22): similar maybe spot left? Let's make:
+col9 RED_HI
+col10 RED
+col11 RED
+col12 RED
+col13 SPOT_DARK
+col14 RED
+col15 RED
+col16 SPOT
+col17 SPOT
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+col22 RED_DARK
+Group B: base, RED_HI, RED, RED, SPOT_DARK, RED, RED, SPOT? Wait col15=RED? I said col15 RED, col16 SPOT. Let's recalc: col9 RED_HI,10 RED,11 RED,12 RED,13 SPOT_DARK,14 RED,15 RED,16 SPOT. So group B col8 base, col9 RED_HI, col10 RED, col11 RED, col12 RED, col13 SPOT_DARK, col14 RED, col15 RED.
+Group C: col16 SPOT, col17 SPOT, col18 RED_DARK, col19 RED_DARK, col20 RED_DARK, col21 RED_DARK, col22 RED_DARK, col23 base.
+
+Row15 (cols9-22): bottom red dark:
+col9 RED_HI
+col10 RED
+col11 RED_DARK
+col12 RED_DARK
+col13 RED_DARK
+col14 RED_DARK
+col15 RED_DARK
+col16 RED_DARK
+col17 RED_DARK
+col18 RED_DARK
+col19 RED_DARK
+col20 RED_DARK
+col21 RED_DARK
+col22 RED_DARK
+Group B: col8 base, col9 RED_HI, col10 RED, col11 RED_DARK, col12 RED_DARK, col13 RED_DARK, col14 RED_DARK, col15 RED_DARK.
+Group C: col16 RED_DARK, col17 RED_DARK, col18 RED_DARK, col19 RED_DARK, col20 RED_DARK, col21 RED_DARK, col22 RED_DARK, col23 base.
+
+Row16 (cols10-21 UNDER):
+Group B: col8 base G16, col9 base, col10 UNDER, col11 UNDER, col12 UNDER, col13 UNDER, col14 UNDER, col15 UNDER.
+Group C: col16 UNDER, col17 UNDER, col18 UNDER, col19 UNDER, col20 UNDER, col21 UNDER, col22 base, col23 base.
+Maybe add cream spots under? no.
+
+Stem rows17-24 cols14-17.
+Row17-23 same:
+Group B: col8-13 base, col14 STEM_HI, col15 STEM.
+Group C: col16 STEM, col17 STEM_SH, col18-23 base.
+But wait group B cols8-15: positions: 8,9,10,11,12,13 base (6), 14 STEM_HI, 15 STEM. Good.
+Group C: 16 STEM, 17 STEM_SH, 18-23 base (6). Good.
+
+Row24 maybe bottom transition:
+Group B: col8-13 base, col14 STEM_HI, col15 STEM.
+Group C: col16 STEM_SH, col17 STEM_DARK, col18-23 base.
+
+Row25 base wider cols13-18:
+Group B cols8-15: col8-12 base (5), col13 STEM_SH? maybe flare, col14 STEM, col15 STEM.
+Group C: col16 STEM_SH, col17 STEM_DARK, col18 STEM_DARK? or base? If base wider includes col18, use STEM_DARK. col19-23 base.
+Maybe row25: col13 STEM_SH, col14 STEM, col15 STEM, col16 STEM_SH, col17 STEM_DARK, col18 STEM_DARK. Good.
+
+Row26 shadow under mushroom: maybe cols13-18 darker than base G26 #68be84. Use SHADOW = #4f9668 (G23) or #3c7953. Let's use #42825a? Need darker. Row26 base #68be84, shadow #458b55? Let's use #458a53. But to avoid new? Raw RGB okay. Could use G22 #4f9668. I'll use #42825a (row20 color) for shadow. Row26: cols13-18 SHADOW #42825a. Group B: col8-12 base, col13 SHADOW, col14 SHADOW, col15 SHADOW. Group C: col16 SHADOW, col17 SHADOW, col18 SHADOW, col19-23 base.
+Row27 maybe fading shadow cols14-17? Could skip.
+
+Now ground base rows 10-31 need 32 tokens. We can fill with base G row. For rows with features, replace as above.
+
+Need add moon/stars sky rows. Let's build all rows in a structured way. To reduce errors, I can write final lines with groups of 8, and verify count by groups.
+
+Let's assign hex values:
+SKY = #0b1226
+STAR = #e9edff
+MOON1 = #eef1fa
+MOON2 = #d0d8ea
+MOON3 = #b9c3da
+TREEDARK = #061410
+G10 = #0f2518
+G11 = #122b1c
+G12 = #153220
+G13 = #193a25
+G14 = #1d422b
+G15 = #214a31
+G16 = #265338
+G17 = #2b5c3e
+G18 = #306545
+G19 = #366f4c
+G20 = #3c7953
+G21 = #42825a
+G22 = #488c61
+G23 = #4f9668
+G24 = #55a06f
+G25 = #5baa76
+G26 = #62b47d (Wait earlier ground row26 was #68be84? Let's re-evaluate ground gradient. Original: row10 #0f2518, 11 #122b1c, 12 #153220, 13 #193a25, 14 #1d422b, 15 #214a31, 16 #265338, 17 #2b5c3e, 18 #306545, 19 #366f4c, 20 #3c7953, 21 #42825a, 22 #488c61, 23 #4f9668, 24 #55a06f, 25 #5baa76, 26 #62b47d, 27 #68be84, 28 #6fc88b, 29 #76d292, 30 #7edc99, 31 #85e6a0. Yes row26 #62b47d, row27 #68be84. I'll use this. Shadow row26 maybe #42825a (G21) okay.
+RED = #c2202a
+RED_DARK = #8a141c
+RED_HI = #e85961
+SPOT = #f4e4bf
+SPOT_DARK = #d6bd8f
+UNDER = #5f0e14
+STEM_HI = #fff3d8
+STEM = #f0dfba
+STEM_SH = #d2bb8e
+STEM_DARK = #ad9266
+SHADOW = #42825a
+
+Need maybe use RED_BRIGHT for top? Not necessary.
+
+Now build each row final. I'll create in analysis with groups. Need ensure 32 tokens. I can use repeated base tokens. Let's do row by row.
+
+Row 0: base SKY, star col5, col20.
+Group A cols0-7: SKY SKY SKY SKY SKY STAR SKY SKY? col5 is 6th token (positions 0-7). So: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226
+Group B cols8-15: all SKY (8)
+Group C cols16-23: col20 star. positions: 16,17,18,19,20,21,22,23 => SKY SKY SKY SKY STAR SKY SKY SKY.
+Group D: all SKY.
+Need count 8+8+8+8.
+
+Row 1: star col8, moon cols26-29.
+Group A: all SKY.
+Group B: col8 star, others SKY: STAR SKY SKY SKY SKY SKY SKY SKY.
+Group C: all SKY.
+Group D cols24-31: col24 SKY, col25 SKY, col26-29 MOON1, col30 SKY, col31 SKY: #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226.
+Row2: star col12, moon cols25-30.
+Group A all SKY.
+Group B cols8-15: col12 star (pos4): SKY SKY SKY SKY STAR SKY SKY SKY.
+Group C all SKY.
+Group D cols24-31: col24 SKY, col25-30 MOON1, col31 SKY: #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #0b1226.
+Row3: star col3, moon cols25-30, crater col27 MOON2? Let's make col27 (pos3 in group D? D:24 pos0,25 pos1,26 pos2,27 pos3,28 pos4,29 pos5,30 pos6,31 pos7) MOON2. Others MOON1.
+Group A: col3 star: SKY SKY SKY STAR SKY SKY SKY SKY.
+Group B all SKY.
+Group C all SKY.
+Group D: col24 SKY, 25 MOON1, 26 MOON1, 27 MOON2, 28 MOON1, 29 MOON1, 30 MOON1, 31 SKY: #0b1226 #eef1fa #eef1fa #d0d8ea #eef1fa #eef1fa #eef1fa #0b1226.
+Row4: star col17, moon cols25-30, crater col28 MOON3.
+Group A all SKY.
+Group B all SKY? col17 in C. Group B all SKY.
+Group C cols16-23: col17 star: SKY STAR SKY SKY SKY SKY SKY SKY.
+Group D: col24 SKY,25 MOON1,26 MOON1,27 MOON1,28 MOON3,29 MOON1,30 MOON1,31 SKY: #0b1226 #eef1fa #eef1fa #eef1fa #b9c3da #eef1fa #eef1fa #0b1226.
+Row5: star col23, moon bottom cols26-29.
+Group A all SKY.
+Group B all SKY.
+Group C: col23 star (pos7): SKY SKY SKY SKY SKY SKY SKY STAR.
+Group D: col24 SKY,25 SKY,26 MOON1,27 MOON1,28 MOON1,29 MOON1,30 SKY,31 SKY: #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226.
+Row6: stars col2, col18, col27.
+Group A: col2 star: SKY SKY STAR SKY SKY SKY SKY SKY.
+Group B all SKY.
+Group C: col18 star (pos2): SKY SKY STAR SKY SKY SKY SKY SKY.
+Group D: col27 star (pos3): SKY SKY SKY STAR SKY SKY SKY SKY? Wait D cols24-31: 24,25,26,27,28,29,30,31. col27 pos3. So #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226.
+Row7: stars col7, col14, col25.
+Group A: col7 star: SKY SKY SKY SKY SKY SKY SKY STAR.
+Group B: col14 star (pos6): SKY SKY SKY SKY SKY SKY STAR SKY.
+Group C all SKY.
+Group D: col25 star (pos1): SKY STAR SKY SKY SKY SKY SKY SKY.
+Row8: sky with cap top cols13-18, star col4 maybe.
+Base SKY. Star col4. Cap colors row8: col13 RED_HI, col14 RED_HI, col15 RED, col16 RED, col17 RED, col18 RED_DARK.
+Group A cols0-7: col4 star: SKY SKY SKY SKY STAR SKY SKY SKY.
+Group B cols8-15: cols8-12 SKY (5), col13 RED_HI, col14 RED_HI, col15 RED: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e85961 #e85961 #c2202a.
+Group C cols16-23: col16 RED, col17 RED, col18 RED_DARK, col19-23 SKY: #c2202a #c2202a #8a141c #0b1226 #0b1226 #0b1226 #0b1226 #0b1226.
+Group D all SKY.
+Row9: tree line + cap row9.
+TREEDARK = #061410.
+Cap row9: col12 RED_HI,13 RED_HI,14 RED,15 RED,16 RED,17 RED,18 RED_DARK,19 RED_DARK.
+Group A cols0-7: TREEDARK x8.
+Group B cols8-15: col8-11 TREEDARK, col12 RED_HI,13 RED_HI,14 RED,15 RED: #061410 #061410 #061410 #061410 #e85961 #e85961 #c2202a #c2202a.
+Group C cols16-23: col16 RED,17 RED,18 RED_DARK,19 RED_DARK, col20-23 TREEDARK: #c2202a #c2202a #8a141c #8a141c #061410 #061410 #061410 #061410.
+Group D: TREEDARK x8.
+
+Now ground rows 10-31.
+Need base G10 etc. For rows with cap/stem, replace.
+I'll create each row group by group. Need be consistent.
+
+Row10 base G10 #0f2518. Cap row10 cols11-20.
+Group A: G10 x8.
+Group B cols8-15: col8-10 G10 (3), col11 RED_HI, col12 RED, col13 SPOT, col14 SPOT, col15 RED: #0f2518 #0f2518 #0f2518 #e85961 #c2202a #f4e4bf #f4e4bf #c2202a.
+Group C cols16-23: col16 RED,17 RED,18 RED_DARK,19 RED_DARK,20 RED_DARK,21-23 G10: #c2202a #c2202a #8a141c #8a141c #8a141c #0f2518 #0f2518 #0f2518.
+Group D: G10 x8.
+
+Row11 base G11 #122b1c. Cap row11 cols10-21.
+Group A: G11 x8.
+Group B: col8-9 G11 (2), col10 RED_HI,11 RED,12 RED,13 SPOT,14 SPOT,15 RED: #122b1c #122b1c #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a.
+Group C: col16 RED,17 RED,18 RED_DARK,19 RED_DARK,20 RED_DARK,21 RED_DARK,22-23 G11: #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #122b1c #122b1c.
+Group D: G11 x8.
+
+Row12 base G12 #153220. Cap row12 cols10-21.
+Group A G12 x8.
+Group B: col8-9 G12, col10 RED_HI,11 RED,12 RED,13 SPOT,14 SPOT,15 RED: #153220 #153220 #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a.
+Group C: col16 RED,17 RED,18 RED_DARK,19 RED_DARK,20 RED_DARK,21 RED_DARK,22-23 G12: #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #153220 #153220.
+Group D G12 x8.
+Maybe row12 same as row11 but base different. ok.
+
+Row13 base G13 #193a25. Cap row13 cols9-22.
+Group A: G13 x8 (cols0-7).
+Group B cols8-15: col8 G13, col9 RED_HI,10 RED,11 RED,12 SPOT,13 RED,14 RED,15 SPOT: #193a25 #e85961 #c2202a #c2202a #f4e4bf #c2202a #c2202a #f4e4bf.
+Group C cols16-23: col16 SPOT,17 RED,18 RED_DARK,19 RED_DARK,20 RED_DARK,21 RED_DARK,22 RED_DARK,23 G13: #f4e4bf #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c #193a25.
+Group D: G13 x8.
+
+Row14 base G14 #1d422b. Cap row14 cols9-22 with spot dark.
+Group A: G14 x8.
+Group B: col8 G14, col9 RED_HI,10 RED,11 RED,12 RED,13 SPOT_DARK,14 RED,15 RED: #1d422b #e85961 #c2202a #c2202a #c2202a #d6bd8f #c2202a #c2202a.
+Group C: col16 SPOT,17 SPOT,18 RED_DARK,19 RED_DARK,20 RED_DARK,21 RED_DARK,22 RED_DARK,23 G14: #f4e4bf #f4e4bf #8a141c #8a141c #8a141c #8a141c #8a141c #1d422b.
+Group D: G14 x8.
+
+Row15 base G15 #214a31. Cap row15 cols9-22 dark.
+Group A: G15 x8.
+Group B: col8 G15, col9 RED_HI,10 RED,11 RED_DARK,12 RED_DARK,13 RED_DARK,14 RED_DARK,15 RED_DARK: #214a31 #e85961 #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c.
+Group C: col16 RED_DARK,17 RED_DARK,18 RED_DARK,19 RED_DARK,20 RED_DARK,21 RED_DARK,22 RED_DARK,23 G15: #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #214a31.
+Group D: G15 x8.
+
+Row16 base G16 #265338. Underside row16 cols10-21 UNDER.
+Group A: G16 x8.
+Group B: col8 G16, col9 G16, col10 UNDER,11 UNDER,12 UNDER,13 UNDER,14 UNDER,15 UNDER: #265338 #265338 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14.
+Group C: col16 UNDER,17 UNDER,18 UNDER,19 UNDER,20 UNDER,21 UNDER,22 G16,23 G16: #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #265338 #265338.
+Group D: G16 x8.
+
+Row17 base G17 #2b5c3e. Stem cols14-17.
+Group A: G17 x8.
+Group B: cols8-13 G17 (6), col14 STEM_HI, col15 STEM: #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #fff3d8 #f0dfba.
+Group C: col16 STEM, col17 STEM_SH, cols18-23 G17 (6): #f0dfba #d2bb8e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e.
+Group D: G17 x8.
+
+Row18 base G18 #306545. Same stem.
+Group A G18 x8.
+Group B: #306545 x6, #fff3d8, #f0dfba.
+Group C: #f0dfba, #d2bb8e, #306545 x6.
+Group D G18 x8.
+
+Row19 base G19 #366f4c. Same.
+Row20 base G20 #3c7953. Same.
+Row21 base G21 #42825a. Same.
+Row22 base G22 #488c61. Same.
+Row23 base G23 #4f9668. Same.
+Row24 base G24 #55a06f. Stem bottom transition: col14 STEM_HI, col15 STEM, col16 STEM_SH, col17 STEM_DARK.
+Group A G24 x8.
+Group B: G24 x6, #fff3d8, #f0dfba.
+Group C: col16 #d2bb8e, col17 #ad9266, G24 x6.
+Group D G24 x8.
+
+Row25 base G25 #5baa76. Base wider cols13-18.
+Group A G25 x8.
+Group B cols8-15: col8-12 G25 (5), col13 STEM_SH #d2bb8e, col14 STEM #f0dfba, col15 STEM #f0dfba: #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #d2bb8e #f0dfba #f0dfba.
+Group C cols16-23: col16 STEM_SH #d2bb8e, col17 STEM_DARK #ad9266, col18 STEM_DARK #ad9266, col19-23 G25 (5): #d2bb8e #ad9266 #ad9266 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76.
+Group D G25 x8.
+
+Row26 base G26 #62b47d. Shadow cols13-18 SHADOW #42825a.
+Group A G26 x8.
+Group B: col8-12 G26 (5), col13 SHADOW, col14 SHADOW, col15 SHADOW: #62b47d #62b47d #62b47d #62b47d #62b47d #42825a #42825a #42825a.
+Group C: col16 SHADOW,17 SHADOW,18 SHADOW, col19-23 G26 (5): #42825a #42825a #42825a #62b47d #62b47d #62b47d #62b47d #62b47d.
+Group D G26 x8.
+
+Row27 base G27 #68be84. No features? Could add bright moss spots. Maybe uniform.
+Row28 base G28 #6fc88b.
+Row29 base G29 #76d292.
+Row30 base G30 #7edc99.
+Row31 base G31 #85e6a0.
+
+Uniform bottom might be okay. But "mossy forest floor" maybe need some texture. We can add small variations in rows27-31 without harming count. But if time, maybe add a few dark/light moss pixels. Need be careful. Could incorporate simple horizontal speckles: For each bottom row, set some columns to slightly darker/lighter. But final already long. Uniform gradient may look like smooth slope, not moss. Maybe add small dark tufts at row28 cols5-6, row29 cols26-27, row30 cols4, col28, row31 col10, col22. But more errors. Could add a dirt patch? Hmm.
+
+Maybe modify bottom rows with a few pixels using group arrays. Let's decide to add subtle moss texture by changing specific columns in each row to darker/lighter. Need ensure count. We can do rows27-31 with group modifications.
+
+Define texture colors:
+MossDark = #4f9668? But for row27 #68be84, darker #55a06f (G24) or #4f9668. Use #4f9668.
+MossLight = #9be6a3 (brighter).
+Dirt = #6b4e33, pebble #a9977e.
+Maybe add a small pebble right side rows29-31. But could distract.
+
+Let's add simple texture:
+Row27 (#68be84): dark pixels col5, col26; light pixel col10? Let's set group A col5 DARK, group B col10 LIGHT, group D col26? D cols24-31: col26 pos2 DARK.
+Row28 (#6fc88b): dark col8, col28; light col13? But col13 maybe shadow? no shadow only row26. okay.
+Row29 (#76d292): pebble? col25-26 pebble? Let's add dark col4, col29; light col9.
+Row30 (#7edc99): dark col6, col27; light col11.
+Row31 (#85e6a0): dark col3, col28; light col12, col18? Could.
+But these arbitrary may look noisy. Maybe better to add small moss tufts with 2 pixels. Uniform may be fine.
+
+The prompt likely evaluates format and subject, not aesthetic. But need "mossy forest floor". Gradient green enough. Maybe add a few dark green spots to suggest moss. I can add without too much risk.
+
+Let's incorporate texture in rows27-31. Need group count. For base row with modifications, I'll create groups.
+
+Row27 base G27 #68be84. Let's add:
+Group A cols0-7: col5 DARK #4f9668. So: G27 G27 G27 G27 G27 #4f9668 G27 G27.
+Group B cols8-15: col10 LIGHT #9be6a3. positions: 8,9,10,11,12,13,14,15 => G27 G27 #9be6a3 G27 G27 G27 G27 G27.
+Group C cols16-23: all G27? maybe col19 DARK #4f9668. positions 16-23: G27 G27 G27 #4f9668 G27 G27 G27 G27.
+Group D cols24-31: col26 DARK #4f9668. positions 24,25,26,27,28,29,30,31: G27 G27 #4f9668 G27 G27 G27 G27 G27.
+Good.
+
+Row28 base G28 #6fc88b. Add:
+Group A: col8? Group A cols0-7: col2 DARK #55a06f, col6 LIGHT #9be6a3. Let's do: G28 G28 #55a06f G28 G28 G28 #9be6a3 G28.
+Group B: col9 DARK #55a06f, col14 LIGHT #9be6a3: positions 8-15: G28 #55a06f G28 G28 G28 G28 G28 #9be6a3.
+Group C: col21 DARK #55a06f: G28 G28 G28 G28 G28 G28 #55a06f G28? Wait C positions 16-23: 16,17,18,19,20,21,22,23. col21 pos5. So #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #55a06f #6fc88b #6fc88b.
+Group D: col29 LIGHT #9be6a3: positions 24-31: #6fc88b #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #6fc88b.
+
+Row29 base G29 #76d292. Maybe add pebble at cols26-27? But row29 group D. Let's add pebble: col26 #a9977e, col27 #b8a88e. Also dark col4, light col9.
+Group A: col4 DARK #55a06f: G29 G29 G29 G29 #55a06f G29 G29 G29.
+Group B: col9 LIGHT #a8e8ae? Use #a8e8ae. positions: col8 G29, col9 LIGHT, rest G29: G29 #a8e8ae G29 G29 G29 G29 G29 G29.
+Group C: all G29 maybe.
+Group D: col26 PEbble1 #a9977e, col27 Pebble2 #b8a88e: positions 24 G29,25 G29,26 #a9977e,27 #b8a88e,28-31 G29: #76d292 #76d292 #a9977e #b8a88e #76d292 #76d292 #76d292 #76d292.
+
+Row30 base G30 #7edc99. Add dark col6, col27, light col11.
+Group A: col6 DARK #55a06f: G30 G30 G30 G30 G30 G30 #55a06f G30.
+Group B: col11 LIGHT #a8e8ae: positions 8,9,10,11,12,13,14,15: G30 G30 G30 #a8e8ae G30 G30 G30 G30.
+Group C: all G30.
+Group D: col27 DARK #55a06f: positions 24-31: G30 G30 G30 G30 G30? Wait col27 pos3. So #7edc99 #7edc99 #7edc99 #55a06f #7edc99 #7edc99 #7edc99 #7edc99.
+
+Row31 base G31 #85e6a0. Add dark col3, col28, light col12, col18.
+Group A: col3 DARK #55a06f: G31 G31 G31 #55a06f G31 G31 G31 G31.
+Group B: col12 LIGHT #c8f7cf: positions 8-15: G31 G31 G31 G31 #c8f7cf G31 G31 G31.
+Group C: col18 LIGHT #c8f7cf: positions16-23: G31 G31 #c8f7cf G31 G31 G31 G31 G31? Wait col18 pos2. So #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0.
+Group D: col28 DARK #55a06f: positions24-31: #85e6a0 #85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0.
+
+This adds texture. Need ensure colors valid. #a8e8ae, #c8f7cf okay.
+
+Could add more moss details near mushroom base: row27-30 around base maybe. But fine.
+
+Need maybe add a small mushroom in background? no.
+
+Now need assemble final 32 lines. Must ensure each line exactly 32 hex tokens. I'll write final carefully. Need no code fences/prose. I can include spaces between tokens. Need 32 lines. I can use line breaks. Need count each line. Let's verify each row group has 8. I'll maybe count tokens in final by visual groups. Since final long, I need be meticulous.
+
+Let's create final row strings in analysis, maybe with group separators? Final cannot have extra separators? It can have spaces, line breaks. I can use single spaces between all tokens. I can mentally group by 8. In final, no group comments. But I can produce lines with tokens. Need avoid missing/extra.
+
+I'll create each line as 4 groups of 8, maybe in analysis with vertical bars, then final without bars. Let's do that.
+
+Define shorthand in analysis for groups, then expand hex. Need final expand all. I'll write each row with groups separated by | for counting, then final remove |. Let's do.
+
+Row0:
+A: SKY SKY SKY SKY SKY STAR SKY SKY
+B: SKY x8
+C: SKY SKY SKY SKY STAR SKY SKY SKY
+D: SKY x8
+Final:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Count: 8 A, 8 B (16), C 8 (24), D 8 (32). Need ensure C: 4 SKY, STAR, 3 SKY? I wrote #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 = 8. D 8. Good.
+
+Row1:
+A SKY x8
+B: STAR SKY x7
+C: SKY x8
+D: SKY SKY MOON1 x4 SKY SKY
+Final:
+A: #0b1226 x8
+B: #e9edff #0b1226 x7
+C: #0b1226 x8
+D: #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226
+Need line:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226
+Check B: after 8, star at pos9, then 7 sky = positions 9-16? 1 star +7 =8. C 8. D 8. Good.
+
+Row2:
+A SKY x8
+B: SKY SKY SKY SKY STAR SKY SKY SKY (star col12 pos4)
+C SKY x8
+D: SKY MOON1 x6 SKY
+Final:
+#0b1226 x8, #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226, #0b1226 x8, #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #0b1226
+Line:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #0b1226
+Count D: sky +6 moon + sky =8. Good.
+
+Row3:
+A: SKY SKY SKY STAR SKY SKY SKY SKY
+B SKY x8
+C SKY x8
+D: SKY MOON1 MOON1 MOON2 MOON1 MOON1 MOON1 SKY
+Final:
+#0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #d0d8ea #eef1fa #eef1fa #eef1fa #0b1226
+Check D 8: sky, moon, moon, moon2, moon, moon, moon, sky =8.
+
+Row4:
+A SKY x8
+B SKY x8
+C: SKY STAR SKY SKY SKY SKY SKY SKY (star col17 pos1)
+D: SKY MOON1 MOON1 MOON1 MOON3 MOON1 MOON1 SKY
+Final:
+#0b1226 x8, #0b1226 x8, #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226, #0b1226 #eef1fa #eef1fa #eef1fa #b9c3da #eef1fa #eef1fa #0b1226
+Line:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #b9c3da #eef1fa #eef1fa #0b1226
+Wait group C should start after 16 tokens. I wrote after 16: #0b1226 #e9edff... Good. D 8. Good.
+
+Row5:
+A SKY x8
+B SKY x8
+C: SKY x7 STAR (col23 pos7)
+D: SKY SKY MOON1 x4 SKY SKY
+Final:
+#0b1226 x16, #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff, #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226
+Line:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226
+Count C: 7 sky + star =8. Good.
+
+Row6:
+A: SKY SKY STAR SKY SKY SKY SKY SKY
+B: SKY x8
+C: SKY SKY STAR SKY SKY SKY SKY SKY (star col18 pos2)
+D: SKY SKY SKY STAR SKY SKY SKY SKY (star col27 pos3)
+Final:
+#0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Wait D: I need 8: sky sky sky star sky sky sky sky. In line after C 8, I wrote #0b1226 #0b1226 #e9edff ...? Let's check: The sequence after 24 tokens: D should #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226. In the line above I wrote: #0b1226 #0b1226 #e9edff #0b1226... That's only two sky before star? Let's recount line: 
+1-8 A: #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+9-16 B: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+17-24 C: #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+25-32 D: #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226? I wrote #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226? Actually line: "... #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226" Let's count from the written line: 
+#0b1226 (1) #0b1226 (2) #e9edff (3) #0b1226 (4) #0b1226 (5) #0b1226 (6) #0b1226 (7) #0b1226 (8) #0b1226 (9) #0b1226 (10) #0b1226 (11) #0b1226 (12) #0b1226 (13) #0b1226 (14) #0b1226 (15) #0b1226 (16) #0b1226 (17) #0b1226 (18) #e9edff (19) #0b1226 (20) #0b1226 (21) #0b1226 (22) #0b1226 (23) #0b1226 (24) #0b1226 (25) #0b1226 (26) #e9edff (27) #0b1226 (28) #0b1226 (29) #0b1226 (30) #0b1226 (31) #0b1226 (32). D star at pos27? col27? D positions 24-31: token25 col24 sky, 26 col25 sky, 27 col26? Wait star should col27 = token28 if 1-based. Here star at token27 = col26. Off by one. Need fix D: sky sky sky star. So tokens 25,26,27 sky, 28 star. In written line D started with sky sky star. Need correct. Let's rewrite row6 final carefully:
+A: 1-8: #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+B: 9-16: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+C: 17-24: #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+D: 25-32: #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226
+Line:
+#0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226
+Good.
+
+Row7:
+A: SKY x7 STAR (col7 pos7)
+B: SKY x6 STAR SKY (col14 pos6? group B positions 8-15: pos0 col8,1 col9,2 col10,3 col11,4 col12,5 col13,6 col14,7 col15. So 6 sky, star, sky.)
+C: SKY x8
+D: SKY STAR SKY x7? col25 pos1: sky, star, 6 sky? Wait 8 tokens: col24 sky, col25 star, col26-31 six sky. So SKY STAR SKY SKY SKY SKY SKY SKY.
+Final:
+A: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff
+B: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226
+C: #0b1226 x8
+D: #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Line:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Check D after C: token25 sky, 26 star. Good.
+
+Row8:
+A: SKY SKY SKY SKY STAR SKY SKY SKY (star col4 pos4)
+B: SKY x5 RED_HI RED_HI RED (cols13,14,15)
+C: RED RED RED_DARK SKY x5? Wait C cols16-23: col16 RED,17 RED,18 RED_DARK,19-23 SKY (5). So 8: #c2202a #c2202a #8a141c #0b1226 #0b1226 #0b1226 #0b1226 #0b1226.
+D: SKY x8.
+Line:
+#0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e85961 #e85961 #c2202a #c2202a #c2202a #8a141c #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Wait B: group B 8 tokens: cols8-15. I wrote after A 8: tokens 9-16: #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e85961 #e85961 #c2202a. That's 5 sky? tokens 9-13 = 5 sky (col8-12), token14 col13 hi, 15 col14 hi, 16 col15 red. Good.
+C tokens17-24: #c2202a #c2202a #8a141c #0b1226 #0b1226 #0b1226 #0b1226 #0b1226. Good.
+D 8.
+
+Row9:
+A: TREEDARK x8
+B: TREEDARK x4 RED_HI RED_HI RED RED
+C: RED RED RED_DARK RED_DARK TREEDARK x4
+D: TREEDARK x8
+Line:
+#061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #e85961 #e85961 #c2202a #c2202a #c2202a #c2202a #8a141c #8a141c #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410
+Count B: tokens9-16: 4 tree, 2 hi, 2 red. C tokens17-24: 2 red,2 dark,4 tree. Good.
+
+Row10 base G10 #0f2518.
+A G10 x8
+B: G10 x3 RED_HI RED SPOT SPOT RED
+C: RED RED RED_DARK RED_DARK RED_DARK G10 x3
+D G10 x8
+Line:
+#0f2518 x8, #0f2518 #0f2518 #0f2518 #e85961 #c2202a #f4e4bf #f4e4bf #c2202a, #c2202a #c2202a #8a141c #8a141c #8a141c #0f2518 #0f2518 #0f2518, #0f2518 x8.
+Final:
+#0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #e85961 #c2202a #f4e4bf #f4e4bf #c2202a #c2202a #c2202a #8a141c #8a141c #8a141c #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518
+Check B: after 8, tokens9-11 three G10? Wait B should col8,9,10 G10 (3), col11 RED_HI. In line tokens: 9 #0f,10 #0f,11 #e85961? Let's count: after A 8, I wrote #0f2518 #0f2518 #0f2518 #e85961 ... Yes tokens9,10,11? Actually token9 first B, token10 second, token11 third? If I wrote three #0f then #e8? The line above: "#0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #e85961 ..." Let's count A 8, then token9 #0f, token10 #0f, token11 #0f, token12 #e8. But B should 3 G10 then RED_HI at col11? Wait col11 is token12 (1-based: col0 token1, col11 token12). B group cols8-15 tokens9-16. col8 token9 G, col9 token10 G, col10 token11 G, col11 token12 RED_HI. Yes line has token12 #e8? Let's see: A tokens 1-8 all #0f. Then I wrote token9 #0f, token10 #0f, token11 #0f, token12 #e8? The sequence after 8: "#0f2518 #0f2518 #0f2518 #e85961"? In line I wrote: #0f2518 x8 then #0f2518 #0f2518 #0f2518 #e85961 #c2202a... That is token9 #0f,10 #0f,11 #0f,12 #e8. Good. B 8: #0f,#0f,#0f,#e8,#c2,#f4,#f4,#c2. In line after #e8 I have #c2202a #f4e4bf #f4e4bf #c2202a. Yes. Good.
+C: col16 token17 #c2,17 token18 #c2,18 token19 #8a,19 token20 #8a,20 token21 #8a,21 token22 #0f,22 token23 #0f,23 token24 #0f. Good. D 8.
+
+Row11 base G11 #122b1c.
+A x8
+B: G11 x2 RED_HI RED RED SPOT SPOT RED (cols10-15? col8,9 G, col10 RED_HI,11 RED,12 RED,13 SPOT,14 SPOT,15 RED)
+C: RED RED RED_DARK RED_DARK RED_DARK RED_DARK G11 x2
+D x8
+Line:
+#122b1c x8, #122b1c #122b1c #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a, #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #122b1c #122b1c, #122b1c x8.
+Final:
+#122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c
+Check token11? A 8, B: token9 #12,10 #12,11 #e8? col10 token11? col10 = token11, yes. Good. C: token17 #c2 (col16),18 #c2,19-22 dark,23-24 G. Good.
+
+Row12 base G12 #153220. Same as row11 but base.
+Line:
+#153220 x8, #153220 #153220 #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a, #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #153220 #153220, #153220 x8.
+Final:
+#153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220
+
+Row13 base G13 #193a25.
+A x8
+B: G13, RED_HI, RED, RED, SPOT, RED, RED, SPOT (col8 G,9 hi,10 red,11 red,12 spot,13 red,14 red,15 spot)
+C: SPOT, RED, RED_DARK x5? Wait C cols16-23: col16 SPOT,17 RED,18-22 RED_DARK (5),23 G13. That's 1+1+5+1=8. Yes.
+D x8
+Line:
+#193a25 x8, #193a25 #e85961 #c2202a #c2202a #f4e4bf #c2202a #c2202a #f4e4bf, #f4e4bf #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c #193a25, #193a25 x8.
+Final:
+#193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #e85961 #c2202a #c2202a #f4e4bf #c2202a #c2202a #f4e4bf #f4e4bf #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25
+Check B 8: token9 #19,10 #e8,11 #c2,12 #c2,13 #f4,14 #c2,15 #c2,16 #f4. C token17 #f4,18 #c2,19-23 #8a? 5 dark, token24 #19. Good.
+
+Row14 base G14 #1d422b.
+A x8
+B: G14, RED_HI, RED, RED, RED, SPOT_DARK, RED, RED (col8 G,9 hi,10 red,11 red,12 red,13 spotdark,14 red,15 red)
+C: SPOT, SPOT, RED_DARK x5, G14 (col16 spot,17 spot,18-22 dark,23 G)
+D x8
+Line:
+#1d422b x8, #1d422b #e85961 #c2202a #c2202a #c2202a #d6bd8f #c2202a #c2202a, #f4e4bf #f4e4bf #8a141c #8a141c #8a141c #8a141c #8a141c #1d422b, #1d422b x8.
+Final:
+#1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #e85961 #c2202a #c2202a #c2202a #d6bd8f #c2202a #c2202a #f4e4bf #f4e4bf #8a141c #8a141c #8a141c #8a141c #8a141c #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b
+
+Row15 base G15 #214a31.
+A x8
+B: G15, RED_HI, RED, RED_DARK x5? Wait B cols8-15: col8 G,9 hi,10 red,11-15 dark (5) => 8. Yes.
+C: RED_DARK x7, G15? cols16-22 dark (7), col23 G. Yes.
+D x8
+Line:
+#214a31 x8, #214a31 #e85961 #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c, #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #214a31, #214a31 x8.
+Final:
+#214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #e85961 #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31
+Count C: token17-23 dark (7), token24 G. Good.
+
+Row16 base G16 #265338.
+A x8
+B: G16 G16 UNDER x6 (col8,9 G,10-15 UNDER)
+C: UNDER x6 G16 G16 (col16-21 UNDER,22,23 G)
+D x8
+Line:
+#265338 x8, #265338 #265338 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14, #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #265338 #265338, #265338 x8.
+Final:
+#265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338
+Count B: 2 G +6 UNDER =8. C: 6 UNDER +2 G. Good.
+
+Row17 base G17 #2b5c3e.
+A x8
+B: G17 x6 STEM_HI STEM (col8-13 6,14,15)
+C: STEM STEM_SH G17 x6 (col16,17,18-23)
+D x8
+Line:
+#2b5c3e x8, #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #fff3d8 #f0dfba, #f0dfba #d2bb8e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e, #2b5c3e x8.
+Final:
+#2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #fff3d8 #f0dfba #f0dfba #d2bb8e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e
+Check B: 6 G tokens 9-14? A 8, B token9-14 G (6), 15 hi,16 stem. Good. C token17 stem,18 sh,19-24 G. Good.
+
+Row18 base G18 #306545. Same pattern.
+Final:
+#306545 x8, #306545 x6 #fff3d8 #f0dfba, #f0dfba #d2bb8e #306545 x6, #306545 x8.
+Expanded:
+#306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #fff3d8 #f0dfba #f0dfba #d2bb8e #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545
+Need ensure B 6 G: after A 8, tokens9-14 G (6), token15 hi,16 stem. In expanded: after first 8, I have 6? Let's count: tokens 9-14: #306545 (9), #306545 (10), #306545 (11), #306545 (12), #306545 (13), #306545 (14), token15 #fff3d8, token16 #f0dfba. In line: first 8, then #306545 #306545 #306545 #306545 #306545 #306545 #fff3d8 #f0dfba. Yes 6. Good.
+
+Row19 base G19 #366f4c.
+Expanded similarly:
+#366f4c x8, #366f45? no #366f4c. Need exact #366f4c.
+#366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #fff3d8 #f0dfba #f0dfba #d2bb8e #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c
+
+Row20 base G20 #3c7953.
+#3c7953 x8, #3c7953 x6 #fff3d8 #f0dfba, #f0dfba #d2bb8e #3c7953 x6, #3c7953 x8.
+Expanded:
+#3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #fff3d8 #f0dfba #f0dfba #d2bb8e #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953
+
+Row21 base G21 #42825a.
+#42825a x8, #42825a x6 #fff3d8 #f0dfba, #f0dfba #d2bb8e #42825a x6, #42825a x8.
+Expanded:
+#42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #fff3d8 #f0dfba #f0dfba #d2bb8e #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a
+
+Row22 base G22 #488c61.
+#488c61 x8, #488c61 x6 #fff3d8 #f0dfba, #f0dfba #d2bb8e #488c61 x6, #488c61 x8.
+Expanded:
+#488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #fff3d8 #f0dfba #f0dfba #d2bb8e #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61
+
+Row23 base G23 #4f9668.
+#4f9668 x8, #4f9668 x6 #fff3d8 #f0dfba, #f0dfba #d2bb8e #4f9668 x6, #4f9668 x8.
+Expanded:
+#4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #fff3d8 #f0dfba #f0dfba #d2bb8e #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668
+
+Row24 base G24 #55a06f. Stem bottom: B same 6 G, hi, stem. C: STEM_SH, STEM_DARK, G x6.
+Line:
+#55a06f x8, #55a06f x6 #fff3d8 #f0dfba, #d2bb8e #ad9266 #55a06f x6, #55a06f x8.
+Expanded:
+#55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #fff3d8 #f0dfba #d2bb8e #ad9266 #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f
+Check C: 2 stem +6 G =8. Good.
+
+Row25 base G25 #5baa76. Base wider.
+A x8
+B: G25 x5 STEM_SH STEM STEM (col8-12 5,13 sh,14 stem,15 stem)
+C: STEM_SH STEM_DARK STEM_DARK G25 x5 (col16 sh,17 dark,18 dark,19-23 5)
+D x8
+Line:
+#5baa76 x8, #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #d2bb8e #f0dfba #f0dfba, #d2bb8e #ad9266 #ad9266 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76, #5baa76 x8.
+Expanded:
+#5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #d2bb8e #f0dfba #f0dfba #d2bb8e #ad9266 #ad9266 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76
+Check B: after A 8, tokens9-13 5 G, token14 sh,15 stem,16 stem. In line: after 8, #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #d2bb8e #f0dfba #f0dfba. Yes 5 G. C token17 sh,18 dark,19 dark,20-24 5 G? Wait C 8 tokens: token17 sh,18 dark,19 dark,20 #5baa,21 #5baa,22 #5baa,23 #5baa,24 #5baa. That's 5 G. Good. D 8.
+
+Row26 base G26 #62b47d. Shadow cols13-18.
+A x8
+B: G26 x5 SHADOW x3 (col8-12 5,13-15 shadow)
+C: SHADOW x3 G26 x5 (col16-18 shadow,19-23 5)
+D x8
+Line:
+#62b47d x8, #62b47d #62b47d #62b47d #62b47d #62b47d #42825a #42825a #42825a, #42825a #42825a #42825a #62b47d #62b47d #62b47d #62b47d #62b47d, #62b47d x8.
+Expanded:
+#62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #42825a #42825a #42825a #42825a #42825a #42825a #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d
+Check B: 5 G +3 shadow. In line after 8: tokens9-13 5 G? I wrote #62 (9), #62(10), #62(11), #62(12), #62(13), #42(14), #42(15), #42(16). Yes. C: token17 #42,18 #42,19 #42,20-24 5 G. Good.
+
+Row27 base G27 #68be84 with texture.
+A: G27 G27 G27 G27 G27 #4f9668 G27 G27 (col5 dark)
+B: G27 G27 #9be6a3 G27 G27 G27 G27 G27 (col10 light)
+C: G27 G27 G27 #4f9668 G27 G27 G27 G27 (col19 dark)
+D: G27 G27 #4f9668 G27 G27 G27 G27 G27 (col26 dark)
+Line:
+#68be84 #68be84 #68be84 #68be84 #68be84 #4f9668 #68be84 #68be84 #68be84 #68be84 #9be6a3 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #4f9668 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #4f9668 #68be84 #68be84 #68be84 #68be84 #68be84
+Check groups: A 8, B tokens9-16: #68,#68,#9b,#68,#68,#68,#68,#68 (8). C 17-24: #68,#68,#68,#4f,#68,#68,#68,#68. D 25-32: #68,#68,#4f,#68,#68,#68,#68,#68. Good.
+
+Row28 base G28 #6fc88b.
+A: G28 G28 #55a06f G28 G28 G28 #9be6a3 G28 (col2 dark, col6 light)
+B: G28 #55a06f G28 G28 G28 G28 G28 #9be6a3 (col9 dark, col15 light)
+C: G28 G28 G28 G28 G28 #55a06f G28 G28 (col21 dark)
+D: G28 G28 G28 G28 #9be6a3 G28 G28 G28 (col29 light? D pos4 col29)
+Line:
+#6fc88b #6fc88b #55a06f #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #55a06f #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #55a06f #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #6fc88b #6fc88b
+Check D: tokens25-32: #6f,#6f,#6f,#6f? Wait I wrote after C: #6fc88b #6fc88b #6fc88b #9be6a3... Let's count line groups:
+A 1-8: #6fc88b (1) #6fc88b (2) #55a06f (3) #6fc88b (4) #6fc88b (5) #6fc88b (6) #9be6a3 (7) #6fc88b (8)
+B 9-16: #6fc88b (9) #55a06f (10) #6fc88b (11) #6fc88b (12) #6fc88b (13) #6fc88b (14) #6fc88b (15) #9be6a3 (16)
+C 17-24: #6fc88b (17) #6fc88b (18) #6fc88b (19) #6fc88b (20) #6fc88b (21) #55a06f (22) #6fc88b (23) #6fc88b (24)
+D 25-32: #6fc88b (25) #6fc88b (26) #6fc88b (27) #9be6a3 (28) #6fc88b (29) #6fc88b (30) #6fc88b (31) #6fc88b (32). But intended col29 light = token30? col24 token25, col25 26, col26 27, col27 28, col28 29, col29 30. I put light at token28 = col27. Need fix D if wanted col29. Could just be col27, okay? I intended col29 but not critical. But need ensure 8. It is fine, light at col27. But if I want consistent, no issue. Let's maybe keep as is. It's texture.
+
+Row29 base G29 #76d292.
+A: G29 x4 #55a06f G29 x3? col4 dark: positions 0-3 G, 4 dark, 5-7 G: #76 #76 #76 #76 #55a06f #76 #76 #76.
+B: G29 #a8e8ae G29 x7? col9 light: token9 G (col8), token10 light, tokens11-16 G: #76d292 #a8e8ae #76d292 #76d292 #76d292 #76d292 #76d292 #76d292.
+C: G29 x8.
+D: G29 G29 #a9977e #b8a88e G29 G29 G29 G29 (pebble col26,27)
+Line:
+#76d292 #76d292 #76d292 #76d292 #55a06f #76d292 #76d292 #76d292 #76d292 #a8e8ae #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #a9977e #b8a88e #76d292 #76d292 #76d292 #76d292
+Check C all 8. D 8. Good.
+
+Row30 base G30 #7edc99.
+A: G30 x6 #55a06f G30 (col6 dark): #7edc99 x6, #55a06f, #7edc99.
+B: G30 x3 #a8e8ae G30 x4? col11 light: positions 8,9,10 G, 11 light,12-15 G (4): #7edc99 #7edc99 #7edc99 #a8e8ae #7edc99 #7edc99 #7edc99 #7edc99.
+C: G30 x8.
+D: G30 x3 #55a06f G30 x4? col27 dark: D positions 24,25,26 G, 27 dark,28-31 G (4): #7edc99 #7edc99 #7edc99 #55a06f #7edc99 #7edc99 #7edc99 #7edc99.
+Line:
+#7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #55a06f #7edc99 #7edc99 #7edc99 #7edc99 #a8e8ae #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #55a06f #7edc99 #7edc99 #7edc99 #7edc99 #7edc99
+Check A: 6 G then dark then G =8. B: 3 G, light,4 G =8. C 8. D 3 G dark 4 G =8. Good.
+
+Row31 base G31 #85e6a0.
+A: G31 x3 #55a06f G31 x4 (col3 dark): #85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0 #85e6a0.
+B: G31 x4 #c8f7cf G31 x3? col12 light: positions 8-11 G (4), 12 light,13-15 G (3): #85e6a0 #85e6a0 #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0.
+C: G31 G31 #c8f7cf G31 G31 G31 G31 G31 (col18 light pos2): #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0.
+D: G31 x4 #55a06f G31 x3 (col28 dark pos4): #85e6a0 #85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0.
+Line:
+#85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0
+Check D: after C token24, D token25-32: #85 (25), #85(26), #85(27), #85(28), #55(29)? Wait intended col28 dark. col24 token25, col25 26, col26 27, col27 28, col28 29. Yes dark token29. In line D: #85 #85 #85 #85 #55 #85 #85 #85. Good.
+
+Need ensure total 32 lines. Rows 0-31 as above. Need final only these lines. But before final, let's double-check all lines count 32. I can verify each by group count. Maybe use mental. Need ensure no line missing tokens due to expansion. I'll enumerate final lines and count maybe by grouping in final? I can in final use exactly 4 groups of 8 but no bars. Need avoid accidental line wrap? Plain text can wrap visually but actual line has tokens. I'll produce each line as one line. Need be careful not to accidentally include trailing spaces? fine.
+
+Let's re-evaluate each final line with token count maybe using groups in final. I can count by splitting mentally. Since final will be long, maybe I can ensure by constructing with 32 tokens each. Let's do a final validation pass line by line, maybe assign numbers 1-32? Too long but can check group boundaries by known patterns.
+
+I will create final as 32 lines, each with 32 tokens. Use the expanded lines above. Need ensure no typo in hex (6 digits). Check hex values:
+#0b1226 (6), #e9edff, #eef1fa, #d0d8ea, #b9c3da, #061410, #0f2518, #122b1c, #153220, #193a25, #1d422b, #214a31, #265338, #2b5c3e, #306545, #366f4c, #3c7953, #42825a, #488c61, #4f9668, #55a06f, #5baa76, #62b47d, #68be84, #6fc88b, #76d292, #7edc99, #85e6a0, #e85961, #c2202a, #f4e4bf, #d6bd8f, #8a141c, #5f0e14, #fff3d8, #f0dfba, #d2bb8e, #ad9266, #9be6a3, #a8e8ae, #a9977e, #b8a88e, #c8f7cf. All valid.
+
+Potential issue: Row4 final line: I need ensure group C star at col17. In line: after 16 sky, #0b1226 #e9edff #0b1226... That means token17 sky (col16), token18 star (col17). Good.
+
+Row5: C star at col23. Line: after 23? A+B 16, C tokens17-24: #0b x7, star token24. In line: after 16: #0b #0b #0b #0b #0b #0b #0b #e9. Yes token24 star. Good.
+
+Row6 corrected.
+
+Row8: B star? Actually row8 has star col4 and cap. B has 5 sky then hi hi red. In line: after A 8, tokens9-13 five sky? Let's count: A: 1-8. Then line: #0b (9) #0b(10) #0b(11) #0b(12) #0b(13) #e8(14) #e8(15) #c2(16). That's 5 sky? tokens9-13 =5, yes. Good. C token17 #c2,18 #c2,19 #8a,20-24 sky. Good.
+
+Row9: tree line. Count: A 8 tree. B tokens9-12 tree? line: #06 (9), #06(10), #06(11), #06(12), #e8(13), #e8(14), #c2(15), #c2(16). col8-11 tree (4), col12-15 cap. Good. C token17 #c2 (col16),18 #c2,19 #8a,20 #8a,21-24 tree. Good.
+
+Row10: Check cap starts col11. A 8. B: token9 col8 #0f,10 col9 #0f,11 col10 #0f,12 col11 #e8,13 col12 #c2,14 col13 #f4,15 col14 #f4,16 col15 #c2. Good. C token17 col16 #c2,18 col17 #c2,19 col18 #8a,20 col19 #8a,21 col20 #8a,22-24 G. Good.
+
+Row11: cap starts col10. A 8. B token9 col8 #12,10 col9 #12,11 col10 #e8,12 col11 #c2,13 col12 #c2,14 col13 #f4,15 col14 #f4,16 col15 #c2. Good. C token17 col16 #c2,18 #c2,19-22 dark (col18-21),23-24 G. Good.
+
+Row12 same.
+
+Row13: cap starts col9. A 8. B token9 col8 #19,10 col9 #e8,11 col10 #c2,12 col11 #c2,13 col12 #f4,14 col13 #c2,15 col14 #c2,16 col15 #f4. C token17 col16 #f4,18 col17 #c2,19-23 dark col18-22,24 col23 #19. Good.
+
+Row14: B token9 #1d,10 #e8,11 #c2,12 #c2,13 #c2,14 #d6,15 #c2,16 #c2. C 17 #f4,18 #f4,19-23 dark,24 #1d. Good.
+
+Row15: B token9 #21,10 #e8,11 #c2,12-16 dark. C token17-23 dark,24 #21. Good.
+
+Row16: B token9 #26,10 #26,11-16 under. C 17-22 under,23-24 #26. Good.
+
+Stem rows: B has 6 base before stem_hi. Let's verify row17 line: first 8 base, then base x6, hi, stem. In expanded line: #2b (1-8), #2b(9), #2b(10), #2b(11), #2b(12), #2b(13), #2b(14), #fff(15), #f0(16). Yes 6 base. C: #f0(17), #d2(18), #2b(19-24) 6. Good.
+
+Row24: C #d2 #ad then 6 base. Good.
+
+Row25: B 5 base before sh. In line: first 8 #5b, then #5b(9),10,11,12,13, #d2(14), #f0(15), #f0(16). 5 base. C #d2(17), #ad(18), #ad(19), #5b(20-24) 5. Good.
+
+Row26: B 5 base, 3 shadow. In line: first 8 #62, then #62(9),10,11,12,13, #42(14),15,16. C #42(17),18,19, #62(20-24). Good.
+
+Texture rows counts okay.
+
+Potential aesthetic: Row16 underside UNDER dark red from col10-21, but stem starts row17 col14-17. The underside row16 includes stem area? It is cap underside, okay. But stem top row17 directly below, no gap. Good.
+
+Night sky: row9 tree line dark all across, but ground row10 starts. The tree line behind cap row9. Good.
+
+Maybe the mushroom cap is too high? It spans rows8-16, stem 17-25, base shadow 26. Ground from row10, so cap bottom row16 is above ground mid, stem extends to row25, base at row25. That's plausible.
+
+Need final only 32 lines, no code fences. Ensure no extra newline? okay.
+
+Double-check row2 line: D moon 6 tokens. In line: after C, #0b #ee #ee #ee #ee #ee #ee #0b. 8. Good.
+
+Row3 D: #0b #ee #ee #d0 #ee #ee #ee #0b. 8.
+
+Row4 D: #0b #ee #ee #ee #b9 #ee #ee #0b. 8.
+
+Row1 D: #0b #0b #ee #ee #ee #ee #0b #0b. 8.
+
+Row5 D: #0b #0b #ee #ee #ee #ee #0b #0b. 8.
+
+Stars row0: A star col5 token6. C star col20 token20? C tokens17-24: #0b(17 col16), #0b18, #0b19, #0b20? Wait token20 is col19? Let's map: token17 col16, 18 col17, 19 col18, 20 col19, 21 col20. I intended star col20. In row0 C I wrote #0b #0b #0b #0b #e9 #0b #0b #0b. That's token17 #0b,18 #0b,19 #0b,20 #0b,21 #e9. So star token21 = col20. Good. I earlier said col20 pos4 (0-based) token21. Good.
+
+Row2 star col12: B tokens9-16: #0b(9 col8), #0b10, #0b11, #0b12? Wait col12 token13. I wrote #0b #0b #0b #0b #e9... Let's count: token9 col8, 10 col9, 11 col10, 12 col11, 13 col12. In line after A: #0b (9), #0b(10), #0b(11), #0b(12), #e9(13). Yes star col12. Good.
+
+Row3 star col3: A tokens1-8: #0b(1 col0), #0b2, #0b3, #e9(4 col3). Good.
+
+Row4 star col17: C tokens17-24: token17 col16 #0b, token18 col17 #e9. Good.
+
+Row5 star col23: C tokens17-24: token24 col23 star. In line after B: #0b(17),#0b18,#0b19,#0b20,#0b21,#0b22,#0b23,#e9 24. Good.
+
+Row6 stars: col2 token3, col18 token19? C token19? C tokens17 col16 #0b,18 col17 #0b,19 col18 star. In line C: #0b #0b #e9... token19 star. Good. col27 D token28? D tokens25 col24 #0b,26 col25 #0b,27 col26 #0b,28 col27 star. In corrected line D: #0b #0b #0b #e9... yes token28. Good.
+
+Row7 stars: col7 token8 star, col14 token15? B tokens9 col8 #0b,10 col9,11 col10,12 col11,13 col12,14 col13,15 col14 star. In line B: #0b #0b #0b #0b #0b #0b #e9 #0b. token15 star. Good. col25 D token26? D tokens25 col24 #0b,26 col25 star. Good.
+
+Now final. Need maybe no trailing spaces. I'll produce exactly. Ensure line count 32. I'll paste the lines I validated.
+
+Let's assemble final carefully:
+1 row0
+2 row1
+3 row2
+4 row3
+5 row4
+6 row5
+7 row6
+8 row7
+9 row8
+10 row9
+11 row10
+12 row11
+13 row12
+14 row13
+15 row14
+16 row15
+17 row16
+18 row17
+19 row18
+20 row19
+21 row20
+22 row21
+23 row22
+24 row23
+25 row24
+26 row25
+27 row26
+28 row27
+29 row28
+30 row29
+31 row30
+32 row31
+
+Need ensure row18 etc exact hex. Let's copy from analysis.
+
+Row0 final:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Count? A 8, B 8, C 8, D 8. Good.
+
+Row1:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226
+Good.
+
+Row2:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #eef1fa #0b1226
+Good.
+
+Row3:
+#0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #d0d8ea #eef1fa #eef1fa #eef1fa #0b1226
+Good.
+
+Row4:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #b9c3da #eef1fa #eef1fa #0b1226
+Good.
+
+Row5:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #eef1fa #eef1fa #eef1fa #eef1fa #0b1226 #0b1226
+Good.
+
+Row6 corrected:
+#0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226
+Good.
+
+Row7:
+#0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Good.
+
+Row8:
+#0b1226 #0b1226 #0b1226 #0b1226 #e9edff #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #e85961 #e85961 #c2202a #c2202a #c2202a #8a141c #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226 #0b1226
+Good.
+
+Row9:
+#061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #e85961 #e85961 #c2202a #c2202a #c2202a #c2202a #8a141c #8a141c #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410 #061410
+Good.
+
+Row10:
+#0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #e85961 #c2202a #f4e4bf #f4e4bf #c2202a #c2202a #c2202a #8a141c #8a141c #8a141c #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518 #0f2518
+Good.
+
+Row11:
+#122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c #122b1c
+Good.
+
+Row12:
+#153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #e85961 #c2202a #c2202a #f4e4bf #f4e4bf #c2202a #c2202a #c2202a #8a141c #8a141c #8a141c #8a141c #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220 #153220
+Good.
+
+Row13:
+#193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #e85961 #c2202a #c2202a #f4e4bf #c2202a #c2202a #f4e4bf #f4e4bf #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25 #193a25
+Good.
+
+Row14:
+#1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #e85961 #c2202a #c2202a #c2202a #d6bd8f #c2202a #c2202a #f4e4bf #f4e4bf #8a141c #8a141c #8a141c #8a141c #8a141c #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b #1d422b
+Good.
+
+Row15:
+#214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #e85961 #c2202a #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #8a141c #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31 #214a31
+Good.
+
+Row16:
+#265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #5f0e14 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338 #265338
+Good.
+
+Row17:
+#2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #fff3d8 #f0dfba #f0dfba #d2bb8e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e #2b5c3e
+Good.
+
+Row18:
+#306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #fff3d8 #f0dfba #f0dfba #d2bb8e #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545 #306545
+Good.
+
+Row19:
+#366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #fff3d8 #f0dfba #f0dfba #d2bb8e #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c #366f4c
+Good.
+
+Row20:
+#3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #fff3d8 #f0dfba #f0dfba #d2bb8e #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953 #3c7953
+Good.
+
+Row21:
+#42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #fff3d8 #f0dfba #f0dfba #d2bb8e #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a #42825a
+Good.
+
+Row22:
+#488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #fff3d8 #f0dfba #f0dfba #d2bb8e #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61 #488c61
+Good.
+
+Row23:
+#4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #fff3d8 #f0dfba #f0dfba #d2bb8e #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668 #4f9668
+Good.
+
+Row24:
+#55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #fff3d8 #f0dfba #d2bb8e #ad9266 #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f #55a06f
+Good.
+
+Row25:
+#5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #d2bb8e #f0dfba #f0dfba #d2bb8e #ad9266 #ad9266 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76 #5baa76
+Good.
+
+Row26:
+#62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #42825a #42825a #42825a #42825a #42825a #42825a #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d #62b47d
+Good.
+
+Row27:
+#68be84 #68be84 #68be84 #68be84 #68be84 #4f9668 #68be84 #68be84 #68be84 #68be84 #9be6a3 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #4f9668 #68be84 #68be84 #68be84 #68be84 #68be84 #68be84 #4f9668 #68be84 #68be84 #68be84 #68be84 #68be84
+Good.
+
+Row28:
+#6fc88b #6fc88b #55a06f #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #55a06f #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #55a06f #6fc88b #6fc88b #6fc88b #6fc88b #6fc88b #9be6a3 #6fc88b #6fc88b #6fc88b #6fc88b
+Good.
+
+Row29:
+#76d292 #76d292 #76d292 #76d292 #55a06f #76d292 #76d292 #76d292 #76d292 #a8e8ae #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #76d292 #a9977e #b8a88e #76d292 #76d292 #76d292 #76d292
+Good.
+
+Row30:
+#7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #55a06f #7edc99 #7edc99 #7edc99 #7edc99 #a8e8ae #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #7edc99 #55a06f #7edc99 #7edc99 #7edc99 #7edc99 #7edc99
+Good.
+
+Row31:
+#85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #c8f7cf #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0 #55a06f #85e6a0 #85e6a0 #85e6a0 #85e6a0 #85e6a0
+Good.
+
+Need final no analysis. Ensure only 32 lines. I'll output.

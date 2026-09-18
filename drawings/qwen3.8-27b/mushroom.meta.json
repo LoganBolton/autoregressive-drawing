@@ -1,0 +1,9 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "reasoning_effort": "xhigh",
+  "finish_reason": "stop",
+  "completion_tokens": 52775,
+  "reasoning_tokens": 45843,
+  "rows_in_reply": 32,
+  "seconds": 997
+}

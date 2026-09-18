@@ -1,0 +1,9 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "reasoning_effort": "medium",
+  "finish_reason": "stop",
+  "completion_tokens": 12194,
+  "reasoning_tokens": 3652,
+  "rows_in_reply": 46,
+  "seconds": 215
+}

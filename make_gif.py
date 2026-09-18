@@ -5,7 +5,8 @@ One row per model, one column per subject. Every canvas fills in at once, in
 reading order — the order the pixels were actually emitted — and then the
 finished frame holds so the viewer can look at the results.
 
-    python3 make_gif.py out/showcase.gif
+    python3 make_gif.py                                   # the main five
+    python3 make_gif.py out/pair.gif --rows qwen3.8-27b gpt-oss-120b
 """
 
 import argparse
@@ -30,19 +31,22 @@ class Row(NamedTuple):
     subtitle: Optional[str] = None   # optional italic second line
 
 
-ROWS = [
-    Row("Opus 5 (Medium)", pathlib.Path("drawings/opus"),
-        LOGOS / "anthropic.png", "(Maybe Opus 5.2?)"),
-    Row("Fable 5.1 (Medium)", pathlib.Path("drawings/fable"),
-        LOGOS / "anthropic.png"),
-    Row("DeepSeek V4.1 Flash (High)", pathlib.Path("drawings/deepseek-v4.1-flash"),
-        LOGOS / "deepseek.png"),
-    Row("GLM 5.3 Flash (Max)", pathlib.Path("drawings/glm-5.3-flash"),
-        LOGOS / "zai.png"),
-    Row("Kimi K3 (Max)", pathlib.Path("drawings/kimi-k3"),
-        LOGOS / "moonshot.png"),
-]
-NROWS = len(ROWS)
+def row(label, folder, logo, subtitle=None):
+    return Row(label, pathlib.Path("drawings") / folder, LOGOS / logo, subtitle)
+
+
+# Every model that can appear, keyed by its drawings/ folder. The label carries
+# the reasoning effort the drawings were made at.
+ALL_ROWS = {r.folder.name: r for r in [
+    row("Opus 5 (Medium)", "opus", "anthropic.png", "(Maybe Opus 5.2?)"),
+    row("Fable 5.1 (Medium)", "fable", "anthropic.png"),
+    row("DeepSeek V4.1 Flash (High)", "deepseek-v4.1-flash", "deepseek.png"),
+    row("GLM 5.3 Flash (Max)", "glm-5.3-flash", "zai.png"),
+    row("Kimi K3 (Max)", "kimi-k3", "moonshot.png"),
+    row("Qwen 3.8 27B (XHigh)", "qwen3.8-27b", "qwen.png"),
+    row("GPT-OSS 120B (Medium)", "gpt-oss-120b", "openai.png"),
+]}
+DEFAULT_ROWS = ["opus", "fable", "deepseek-v4.1-flash", "glm-5.3-flash", "kimi-k3"]
 
 # Layout
 SCALE = 8                 # one drawing pixel -> SCALE x SCALE screen pixels
@@ -54,7 +58,11 @@ TOP = BOTTOM = 56
 LOGO_H = 42               # logos scale to this height, then left-align
 LOGO_GAP = 16             # space between logo and label
 W = MARGIN_X + LABEL_W + 4 * TILE + 3 * GAP_X + MARGIN_X
-H = TOP + NROWS * TILE + (NROWS - 1) * GAP_Y + BOTTOM
+
+
+def height(nrows):
+    return TOP + nrows * TILE + (nrows - 1) * GAP_Y + BOTTOM
+
 
 # Palette
 BG = (255, 255, 255)
@@ -80,10 +88,10 @@ def tile_origin(row, col):
             TOP + row * (TILE + GAP_Y))
 
 
-def load_grids():
+def load_grids(rows):
     """All grids as arrays, indexed [row][column]."""
     return [[np.array(read_grid(r.folder / f"{s}.txt"), dtype=np.uint8) for s in SUBJECTS]
-            for r in ROWS]
+            for r in rows]
 
 
 def draw_label(img, d, row, y):
@@ -106,11 +114,11 @@ def draw_label(img, d, row, y):
         d.text((x, mid + 31 + dy), row.subtitle, font=font(22, "italic"), fill=MUTED)
 
 
-def chrome():
+def chrome(rows):
     """The parts that never change: labels and empty canvases."""
-    img = Image.new("RGB", (W, H), BG)
+    img = Image.new("RGB", (W, height(len(rows))), BG)
     d = ImageDraw.Draw(img)
-    for r, row in enumerate(ROWS):
+    for r, row in enumerate(rows):
         draw_label(img, d, row, tile_origin(r, 0)[1])
         for c in range(len(SUBJECTS)):
             x, y = tile_origin(r, c)
@@ -121,7 +129,7 @@ def chrome():
 def frame_at(base, grids, n, cursor=True):
     """A frame with the first n pixels drawn on every canvas."""
     arr = np.array(base)
-    for r in range(NROWS):
+    for r in range(len(grids)):
         for c in range(len(SUBJECTS)):
             x0, y0 = tile_origin(r, c)
             canvas = np.full((GRID, GRID, 3), EMPTY, dtype=np.uint8)
@@ -142,10 +150,13 @@ def main():
     p.add_argument("--ms", type=int, default=40, help="frame duration in ms")
     p.add_argument("--hold", type=int, default=20000, help="final hold in ms")
     p.add_argument("--lead", type=int, default=800, help="empty-canvas lead-in in ms")
+    p.add_argument("--rows", nargs="+", choices=ALL_ROWS, default=DEFAULT_ROWS,
+                   help="which models to show, top to bottom")
     args = p.parse_args()
 
-    grids = load_grids()
-    base = chrome()
+    rows = [ALL_ROWS[name] for name in args.rows]
+    grids = load_grids(rows)
+    base = chrome(rows)
 
     frames = [frame_at(base, grids, 0, cursor=False)]
     durations = [args.lead]
@@ -164,7 +175,7 @@ def main():
     args.out.parent.mkdir(parents=True, exist_ok=True)
     quantized[0].save(args.out, save_all=True, append_images=quantized[1:],
                       duration=durations, loop=0, optimize=False, disposal=1)
-    print(f"{W}x{H}, {len(frames)} frames, {sum(durations) / 1000:.1f}s -> {args.out} "
+    print(f"{W}x{base.height}, {len(frames)} frames, {sum(durations) / 1000:.1f}s -> {args.out} "
           f"({args.out.stat().st_size / 1e6:.1f} MB)")
 
 

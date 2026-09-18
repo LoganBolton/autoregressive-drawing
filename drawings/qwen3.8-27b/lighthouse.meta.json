@@ -1,0 +1,10 @@
+{
+  "model": "qwen/qwen3.8-27b",
+  "reasoning_effort": "xhigh",
+  "finish_reason": "stop",
+  "completion_tokens": 48490,
+  "reasoning_tokens": 41990,
+  "rows_in_reply": 32,
+  "seconds": 593,
+  "note": "Third attempt. The first returned 5 rows; a retry was stopped after ~30 min in favour of this identical, live-streamed request."
+}

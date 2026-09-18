@@ -1,0 +1,316 @@
+The user wants a pixel art drawing 32x32, raw RGB hex codes. The prompt: "Draw pixel art one pixel at a time, left to right, line by line." Must output plain text: 32 lines, each with 32 hex tokens separated by space. No code fences, no extra text.
+
+We need to design a simple representation of a sunset on a beach with waves. Must choose colors.
+
+We need to produce a plausible 32x32 image, but we must commit to each pixel sequentially; we cannot go back. However, as we are generating text, we can generate the whole thing at once. The developer instruction says must output directly row by row.
+
+Hence, we need to create 32 rows each with 32 colors.
+
+Simplify: top rows sky gradient from dark blue to orange then pink near horizon. Then lower rows sand (beach) beige, with some waves in blue/white near bottom.
+
+Let's design color palette:
+
+- Sky top: dark blue: #001440 (navy)
+- Next: slightly lighter: #003080
+- Then turquoise: #0060A0
+- Then orange: #FF6600
+- Then pink: #FF99CC
+- Horizon line maybe blend.
+
+- Sand: #F4D9A9 (light sand)
+- Darker sand near water: #E0C090
+
+- Waves: water: #0066CC (blue) and white: #FFFFFF for crest.
+
+We need 32 rows, each row 32 columns.
+
+Simplify: top 12 rows sky gradient, rows 13-20 beach sand, rows 21-27 water with waves, rows 28-32 maybe deeper water.
+
+Let's map:
+
+Rows 0-11 (12 rows sky): We'll gradually shift colors. For simplicity, each column same color per row (vertical gradient). That is okay, though real pixel art might have some variation.
+
+Define row colors:
+Row0: #001440
+Row1: #001E60
+Row2: #003080
+Row3: #0040A0
+Row4: #0050C0
+Row5: #0060E0
+Row6: #0070FF (maybe bright)
+Row7: #FF6600 (orange sunset)
+Row8: #FF8855 (lighter orange)
+Row9: #FFAA88 (peach)
+Row10: #FFCCBB (light pink)
+Row11: #FFEEDD (very light)
+
+But we must avoid bright unrealistic? but okay.
+
+Rows 12-19 (8 rows) sand: row12: #F4D9A9, row13: #F0D5A5, row14: #ECD1A1, row15: #E8CDA0, row16: #E4C99C, row17: #E0C598, row18: #DCC294, row19: #D8BE90.
+
+Rows 20-26 (7 rows) water with waves. We'll have water base #0066CC. We'll add some white cells to represent crest; maybe create a simple pattern: diagonal wave of white across rows.
+
+We need to fill each row with 32 tokens. For water rows, we could have base water color but some white pixels at certain positions.
+
+Let's design waves: Maybe a sine shape: For example row20: white at col 5,15,25; row21: white at col 8,18,28; row22: white at col 2,12,22,32? Actually index from 0-31.
+
+Better to make simple pattern: each even row have white at every 8th column starting offset.
+
+Row20 (index 20): white at positions 4,12,20,28 (0-index). Row21: white at positions 2,10,18,26. Row22: same as row20. Row23: same as row21. Row24: row20. Row25: row21. Row26: row20.
+
+But need to keep within 0-31.
+
+Positions: Let's use positions with 0-index. We'll generate per row.
+
+Row20: cols 4,12,20,28 = white. Others water.
+
+Row21: cols 2,10,18,26 = white.
+
+Row22: same as Row20.
+
+Row23: same as Row21.
+
+Row24: same as Row20.
+
+Row25: same as Row21.
+
+Row26: same as Row20.
+
+Rows 27-31: deeper water maybe dark blue: #003366 with maybe less waves.
+
+Row27: base #003366 (deep) maybe no white.
+
+Row28: #002244
+
+Row29: #001133
+
+Row30: #000022
+
+Row31: #000011
+
+Now we need to output each line with 32 hex tokens. Ensure tokens are uppercase hex.
+
+Let's construct each row.
+
+Row0: all #001440 repeated 32 times.
+
+Row1: #001E60 repeated.
+
+Row2: #003080 repeated.
+
+Row3: #0040A0 repeated.
+
+Row4: #0050C0 repeated.
+
+Row5: #0060E0 repeated.
+
+Row6: #0070FF repeated.
+
+Row7: #FF6600 repeated.
+
+Row8: #FF8855 repeated.
+
+Row9: #FFAA88 repeated.
+
+Row10: #FFCCBB repeated.
+
+Row11: #FFEEDD repeated.
+
+Row12: #F4D9A9 repeated.
+
+Row13: #F0D5A5 repeated.
+
+Row14: #ECD1A1 repeated.
+
+Row15: #E8CDA0 repeated.
+
+Row16: #E4C99C repeated.
+
+Row17: #E0C598 repeated.
+
+Row18: #DCC294 repeated.
+
+Row19: #D8BE90 repeated.
+
+Row20: mostly #0066CC, with whites at positions 4,12,20,28. Let's create list of 32 entries: for i in 0..31, if i in {4,12,20,28} then #FFFFFF else #0066CC.
+
+Row21: whites at 2,10,18,26. Same logic.
+
+Row22: same as Row20.
+
+Row23: same as Row21.
+
+Row24: same as Row20.
+
+Row25: same as Row21.
+
+Row26: same as Row20.
+
+Row27: #003366 repeated.
+
+Row28: #002244 repeated.
+
+Row29: #001133 repeated.
+
+Row30: #000022 repeated.
+
+Row31: #000011 repeated.
+
+Now generate text lines.
+
+We need to ensure exactly 32 tokens per line separated by space.
+
+Let's craft Row0: "#001440 " repeated 32 but no trailing space? The spec: space-separated tokens, typical last token maybe without trailing space. We'll just separate with spaces.
+
+Row0: "#001440 #001440 ... 32 times". Let's count. We'll write 32 tokens.
+
+I'll write each line manually.
+
+Row0: tokens 1-32 all #001440.
+
+We'll do it:
+
+Line1:
+#001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440 #001440
+
+Similarly for others.
+
+Proceed to compose all lines.
+
+Row1: #001E60.
+
+Row2: #003080.
+
+Row3: #0040A0.
+
+Row4: #0050C0.
+
+Row5: #0060E0.
+
+Row6: #0070FF.
+
+Row7: #FF6600.
+
+Row8: #FF8855.
+
+Row9: #FFAA88.
+
+Row10: #FFCCBB.
+
+Row11: #FFEEDD.
+
+Row12: #F4D9A9.
+
+Row13: #F0D5A5.
+
+Row14: #ECD1A1.
+
+Row15: #E8CDA0.
+
+Row16: #E4C99C.
+
+Row17: #E0C598.
+
+Row18: #DCC294.
+
+Row19: #D8BE90.
+
+Row20: 32 tokens: positions? Let's write index positions from 0.
+
+We'll write sequence:
+
+i0 #0066CC
+i1 #0066CC
+i2 #0066CC
+i3 #0066CC
+i4 #FFFFFF
+i5 #0066CC
+i6 #0066CC
+i7 #0066CC
+i8 #0066CC
+i9 #0066CC
+i10 #0066CC
+i11 #0066CC
+i12 #FFFFFF
+i13 #0066CC
+i14 #0066CC
+i15 #0066CC
+i16 #0066CC
+i17 #0066CC
+i18 #0066CC
+i19 #0066CC
+i20 #FFFFFF
+i21 #0066CC
+i22 #0066CC
+i23 #0066CC
+i24 #0066CC
+i25 #0066CC
+i26 #0066CC
+i27 #0066CC
+i28 #FFFFFF
+i29 #0066CC
+i30 #0066CC
+i31 #0066CC
+
+Check: whites at 4,12,20,28 correct.
+
+Row21: whites at 2,10,18,26.
+
+We'll generate:
+
+i0 #0066CC
+i1 #0066CC
+i2 #FFFFFF
+i3 #0066CC
+i4 #0066CC
+i5 #0066CC
+i6 #0066CC
+i7 #0066CC
+i8 #0066CC
+i9 #0066CC
+i10 #FFFFFF
+i11 #0066CC
+i12 #0066CC
+i13 #0066CC
+i14 #0066CC
+i15 #0066CC
+i16 #0066CC
+i17 #0066CC
+i18 #FFFFFF
+i19 #0066CC
+i20 #0066CC
+i21 #0066CC
+i22 #0066CC
+i23 #0066CC
+i24 #0066CC
+i25 #0066CC
+i26 #FFFFFF
+i27 #0066CC
+i28 #0066CC
+i29 #0066CC
+i30 #0066CC
+i31 #0066CC
+
+Row22 same as Row20.
+
+Row23 same as Row21.
+
+Row24 same as Row20.
+
+Row25 same as Row21.
+
+Row26 same as Row20.
+
+Row27: all #003366.
+
+Row28: #002244.
+
+Row29: #001133.
+
+Row30: #000022.
+
+Row31: #000011.
+
+Now write all lines. Ensure no extra lines.
+
+Let's compile text.

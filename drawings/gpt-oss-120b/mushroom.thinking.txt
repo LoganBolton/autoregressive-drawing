@@ -1,0 +1,942 @@
+We need to output a 32x32 grid of hex RGB values separated by spaces, exactly 32 lines. The instruction: draw pixel art one pixel at a time, left to right, line by line. No code generation; just output the grid. Must not edit later.
+
+We need to imagine a red mushroom with cream-colored stem, mossy forest floor, night sky background. 32x32 low-res pixel art. We must produce hex colors for each pixel.
+
+We need to "draw" line by line. Since we cannot edit later, we must commit to each line as we write. But we are ChatGPT; we can plan entire image then output. However instruction says we must not revise, but it's okay as long as we produce final output. We'll just produce consistent design.
+
+Let's design a simple mushroom in center.
+
+Simplify: background night sky - dark blue (#00102A maybe). Moss floor - dark green (#0A3B1F) near bottom. Cream stem: #F5E1C0. Red cap: #C41E3A.
+
+We'll have sky above maybe stars (#FFFFFF small). But limited.
+
+We'll define rows 0-31. Let's allocate top 20 rows as sky, bottom 12 rows as forest floor with moss. Mushroom appears around rows 15-28 maybe.
+
+We'll need to fill each pixel with a color.
+
+Let's design.
+
+Define colors:
+
+- Sky: #00104A (dark night blue)
+- Star: #FFFFFF (white)
+- Moss: #0A4B33 (dark green)
+- Ground dirt maybe a bit lighter: #1A5A44.
+- Mushroom cap: #C41E3A (red)
+- Mushroom cap shading maybe darker: #A01431.
+- Mushroom stem: #F5E1C0 (cream)
+- Stem shading: #E0C9A5 (slightly darker)
+- Spot: maybe a white spot on cap: #FFC0CB (pinkish)
+- Optional shadow under mushroom: #000000 with low opacity but we cannot do opacity; maybe dark green.
+
+We'll fill each row.
+
+Approach: create background sky for top 20 rows with occasional stars.
+
+Rows 0-19: Fill with sky color, add few stars.
+
+Rows 20-31: Moss floor.
+
+Mushroom: cap spans maybe rows 16-22, width ~14 pixels centered at column 16.
+
+Let's define column indices 0-31.
+
+Center column = 16.
+
+Cap shape: approximate dome.
+
+We'll define cap rows:
+
+Row 16 (y=16): cap width maybe 10 pixels from col 11-20, red.
+
+Row 17: width 12 from col 10-21.
+
+Row 18: width 14 from col 9-22.
+
+Row 19: width 12 from col 10-21 (top of stem overlapping? Actually cap top continues). Row 20 maybe cap bottom with shading.
+
+Stem rows: from row 20 down to 27 maybe.
+
+Stem width 4 pixels (col 14-17). Stem color cream.
+
+We'll add shading on left side maybe.
+
+Now fill rows.
+
+Let's define constants:
+
+sky = "00104A"
+star = "FFFFFF"
+moss = "0A4B33"
+dirt = "1A5A44" maybe not needed.
+
+cap_red = "C41E3A"
+cap_dark = "A01431"
+stem_cream = "F5E1C0"
+stem_shadow = "E0C9A5"
+spot = "FFC0CB"
+
+We'll implement row by row.
+
+We'll need to produce 32 tokens per row.
+
+We'll compute each pixel manually.
+
+We'll create a function in mind, but we must write final lines.
+
+Let's map rows:
+
+0-19 sky. Add stars at few coordinates.
+
+Pick stars at (row,column): (2,5), (5,12), (7,25), (10,3), (13,30). We'll add star color instead of sky.
+
+Row 0: no stars.
+
+Row 0 tokens: all sky.
+
+Row 0: columns 0-31 => "00104A" repeated 32.
+
+Similarly rows.
+
+But we need to manually write lines.
+
+Make a list.
+
+I'll produce each row string.
+
+Let's start.
+
+Row0 (y=0): 32 sky.
+
+Row0: "00104A" *32 separated by space.
+
+Row1: similarly.
+
+Row2: star at col5 (0-index). So columns 0-4 sky, col5 star, rest sky.
+
+Row2: indexes 0-31.
+
+Construct: positions.
+
+We'll write tokens: for col0-4 "00104A", col5 "FFFFFF", col6-31 "00104A".
+
+Row3: no star.
+
+Row4: maybe star at col16? but we said star at (5,12) currently row5. okay.
+
+Row5: star at col12.
+
+Row5: columns 0-11 sky, col12 star, rest sky.
+
+Row6: no.
+
+Row7: star at col25.
+
+Row8: no.
+
+Row9: no.
+
+Row10: star at col3.
+
+Row11: no.
+
+Row12: no.
+
+Row13: star at col30.
+
+Row14-15: no stars.
+
+Rows 16-31: we will handle.
+
+Now produce rows.
+
+We'll need to write each line with 32 hex tokens separated by space.
+
+Let's write row by row.
+
+I'll prewrite sky token = "00104A". star = "FFFFFF". Let's produce.
+
+Row0: 32 sky.
+
+I'll create string: "00104A " repeated 31 then last without trailing space? Output demands space-separated tokens, may have trailing space not ideal. We'll just join with spaces.
+
+Row0: 32 tokens.
+
+I'll write them manually? Could copy-paste but need to type.
+
+I'll write as:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+That's row0.
+
+Row1 same.
+
+Row2: columns 0-4 sky, col5 star, 6-31 sky.
+
+So tokens: first five sky, then star, then remaining 26 sky.
+
+Let's count.
+
+Indices:
+
+0 sky
+1 sky
+2 sky
+3 sky
+4 sky
+5 star
+6 sky
+...
+31 sky.
+
+Thus row2: 5 sky, star, 26 sky = total 32.
+
+Will write: sky repeated 5 then star then sky repeated 26.
+
+Let's generate.
+
+Row2:
+
+00104A 00104A 00104A 00104A 00104A FFFFFFF 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row3: all sky.
+
+Row4: all sky.
+
+Row5: star at col12.
+
+Indices: 0-11 sky, col12 star, 13-31 sky (19 tokens). So row5:
+
+00104A repeated 12, then FFFFFF, then 19 sky.
+
+Let's write.
+
+Row5: start.
+
+I'll produce: 12 sky tokens.
+
+Count: I'll write them sequentially.
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A FFFFFFF 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row6: all sky.
+
+Row7: star at col25.
+
+So 0-24 sky (25 tokens), col25 star, 26-31 sky (6 tokens).
+
+Row7 line.
+
+Row8: sky.
+
+Row9: sky.
+
+Row10: star at col3.
+
+So 0-2 sky, col3 star, rest sky.
+
+Row10.
+
+Row11: sky.
+
+Row12: sky.
+
+Row13: star at col30.
+
+So 0-29 sky (30 tokens), col30 star, col31 sky.
+
+Row13.
+
+Row14: sky.
+
+Row15: sky.
+
+Now rows 16 onward we start mushroom.
+
+Define cap rows.
+
+We need to formalize composition per row.
+
+Canvas width 32. Center ~16. We'll define cap shapes.
+
+I'll map each row with column ranges for colors.
+
+Define:
+
+Row16 (y=16): cap width 10 from col11 to col20 inclusive (that's 10 columns). Color cap_red.
+
+All other positions: background maybe sky? Actually mushroom appears on forest floor maybe row16 still sky? Actually row16 is still part of sky region originally but now we shift to forest floor? We said forest floor starts at row20. So rows 16-19 are transitional sky? Actually mushroom cap should appear above floor, but floor is at row20 onwards, maybe the cap appears in sky background, but that may look floating. Better to have floor from row18 onward? Let's adjust: let's set floor starting row18. That way cap appears above floor.
+
+Let's recount: earlier we set floor rows 20-31 (12 rows). That gives cap rows 16-19 above floor at row20 (cap base). That's okay.
+
+Thus rows 16-19 background still sky (dark blue) but we will replace with cap colors for mushroom. That will overlay.
+
+So row16: set columns 11-20 red, others sky.
+
+Row17: cap width 12 from col10-21 red.
+
+Row18: cap width 14 from col9-22 red.
+
+Row19: cap width 12 from col10-21 red, but also maybe shading? Could leave red.
+
+Row20: This row is floor row. We'll fill moss but also cap base maybe shading and start stem.
+
+Row20: The cap bottom maybe cap_dark on inner edge and also maybe stem.
+
+Simplify: Row20: moss background for floor except central area where stem is. Stem columns 14-17 with cream.
+
+Also maybe cap shading on left/right of stem? Not needed.
+
+Row20: For positions col14-17 = stem_cream. Others moss.
+
+Row21: Stem continues.
+
+Row22: Stem continues.
+
+Row23: Stem continues maybe with shading left side? We'll define stem_cream for col14-17, maybe shading at col13 as stem_shadow and col18 as stem_shadow.
+
+Row24: same as row23.
+
+Row25: same.
+
+Row26: maybe bottom part with shadow on ground? but we can keep stem until row27 then end.
+
+Let's set stem height from row20 to row27 (8 rows). We'll keep width 4 columns (14-17). Add shading on both sides col13 and col18 as stem_shadow for rows 23-27 maybe.
+
+Now floor rows beyond 28 perhaps just moss.
+
+Let's list rows:
+
+Row20: columns 14-17 stem_cream. other columns moss.
+
+Row21: same as row20.
+
+Row22: same.
+
+Row23: stem_cream at 14-17, stem_shadow at 13 and 18.
+
+Row24: same as row23.
+
+Row25: same as row23.
+
+Row26: same.
+
+Row27: same.
+
+Rows 28-31: all moss.
+
+Now we also have background sky for rows 16-19 but we overwrite with cap.
+
+Also include maybe some spots on cap: maybe a spot at row18 col16 (center) as spot color pink.
+
+Also maybe star-like texture but fine.
+
+Now we must produce each row's 32 tokens.
+
+Let's define color codes:
+
+sky = 00104A
+moss = 0A4B33
+cap_red = C41E3A
+stem_cream = F5E1C0
+stem_shadow = E0C9A5
+spot = FFC0CB
+star = FFFFFF
+
+Now generate each row.
+
+I'll enumerate each column 0-31.
+
+Row0-15 known.
+
+Let's generate row0-15 lines.
+
+We already have rows 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15.
+
+Rows 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15.
+
+We have row0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15.
+
+We prepared rows 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15. Need to write row3,4,6,8,9,11,12,14,15 (all sky). Row7 star at col25.
+
+Let's write them.
+
+Row0 line (sky). Row1 same.
+
+Row3 sky.
+
+Row4 sky.
+
+Row6 sky.
+
+Row8 sky.
+
+Row9 sky.
+
+Row11 sky.
+
+Row12 sky.
+
+Row14 sky.
+
+Row15 sky.
+
+Now row7 star.
+
+Row10 star.
+
+Row13 star.
+
+Now row16-31.
+
+Let's construct each row tokens.
+
+I'll produce for each row a list, then write.
+
+Row0 tokens: 32 *00104A.
+
+Row0: as previously.
+
+Row1: same.
+
+Row2: as earlier.
+
+Row3: all sky.
+
+Row4: all sky.
+
+Row5: star at col12.
+
+Row6: sky.
+
+Row7: star at col25.
+
+Row8: sky.
+
+Row9: sky.
+
+Row10: star at col3.
+
+Row11: sky.
+
+Row12: sky.
+
+Row13: star at col30.
+
+Row14: sky.
+
+Row15: sky.
+
+Row16: cap red from col11-20 inclusive (10 columns). So columns 0-10 sky, 11-20 cap_red, 21-31 sky.
+
+Lets produce row16 tokens.
+
+Indices:
+
+0-10 sky (11 tokens)
+11-20 cap_red (10 tokens)
+21-31 sky (11 tokens)
+
+Row16 line.
+
+Row17: cap width 12 from col10-21 inclusive.
+
+Columns 0-9 sky (10 tokens)
+10-21 cap_red (12 tokens)
+22-31 sky (10 tokens)
+
+Row18: cap width 14 col9-22 inclusive.
+
+0-8 sky (9 tokens)
+9-22 cap_red (14 tokens)
+23-31 sky (9 tokens)
+
+Row19: cap width 12 col10-21 inclusive (same as row17) maybe also spot? Let's keep same red.
+
+0-9 sky (10)
+10-21 cap_red (12)
+22-31 sky (10)
+
+Row20: floor row. Mushrooms stem. So columns:
+
+0-12 moss? But we have moss for whole row except stem columns.
+
+Indices:
+
+0-12 moss (13 tokens)
+13? We'll keep moss (since shading starts later). Actually stem columns start at 14.
+
+col14-17 stem_cream.
+
+col18-31 moss.
+
+So 0-13? Wait 0-13 inclusive is 14 tokens: 0-13. But we said col14-17 inclusive. So col0-13 = 14 tokens of moss. col14-17 4 tokens cream. col18-31 = 14 tokens moss.
+
+Thus row20.
+
+Row21: same as row20.
+
+Row22: same as row20.
+
+Row23: shading. So:
+
+col0-12 moss? Actually shading at col13 (stem_shadow) and col18 (stem_shadow). We'll produce:
+
+col0-12 moss (13 tokens)
+col13 stem_shadow
+col14-17 stem_cream
+col18 stem_shadow
+col19-31 moss (13 tokens)
+
+Check total: 13 +1+4+1+13 = 32.
+
+Rows 24-27 same as row23.
+
+Rows 28-31: all moss.
+
+Now also need spot on cap: row18 col16 spot pink.
+
+Row18 currently cap_red for 9-22 inclusive. We'll replace col16 with spot. So adjust row18: at column 16 token = spot (FFC0CB) instead of cap_red.
+
+Similarly could add another spot row17 maybe but keep simple.
+
+Now generate each row.
+
+We must ensure correct token count.
+
+Let's write each row line.
+
+I'll craft manually.
+
+First define token strings:
+
+Sky = 00104A
+Moss = 0A4B33
+Cap = C41E3A
+Stem = F5E1C0
+Shade = E0C9A5
+Spot = FFC0CB
+Star = FFFFFF
+
+Now produce lines.
+
+Row0: 32 Sky.
+
+I'll write a line with 32 tokens.
+
+Row0:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row1 same as Row0.
+
+Row2 as earlier.
+
+Row3 same as sky.
+
+Row4 same.
+
+Row5 star at col12.
+
+Row6 sky.
+
+Row7 star at col25.
+
+Row8 sky.
+
+Row9 sky.
+
+Row10 star at col3.
+
+Row11 sky.
+
+Row12 sky.
+
+Row13 star at col30.
+
+Row14 sky.
+
+Row15 sky.
+
+Now produce each of these rows.
+
+Will need to ensure correct number tokens per row.
+
+Let's write them one by one.
+
+Row0 (written).
+
+Row1:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row2 already.
+
+Row3 sky line.
+
+Row4 sky line.
+
+Row5 etc.
+
+Let's write all rows fully.
+
+I'll now write final answer with 32 lines.
+
+Check counts:
+
+Row2 we wrote earlier with 5 sky, star, 26 sky = 32 tokens? 5+1+26=32 correct.
+
+Row5: 12 sky, star, 19 sky = 32.
+
+Row7: 25 sky, star, 6 sky = 32.
+
+Row10: 3 sky, star, 28 sky = 32.
+
+Row13: 30 sky, star, 1 sky = 32.
+
+Now Row16 with 11 sky,10 cap,11 sky = 32.
+
+Row17 with 10 sky,12 cap,10 sky = 32.
+
+Row18 with 9 sky, then cap from 9-22 but with spot at 16. That is columns 9-22 inclusive (14 columns) where col16 is spot. So we need tokens order.
+
+Let's list columns 0-31 for Row18.
+
+Indices:
+
+0-8: sky (9 tokens)
+
+9: cap
+
+10: cap
+
+11: cap
+
+12: cap
+
+13: cap
+
+14: cap
+
+15: cap
+
+16: spot
+
+17: cap
+
+18: cap
+
+19: cap
+
+20: cap
+
+21: cap
+
+22: cap
+
+23-31: sky (9 tokens)
+
+Thus tokens.
+
+Row19 similar to row17 (no spot). 10 sky,12 cap,10 sky.
+
+Row20: 0-13 moss (14 tokens), 14-17 stem (4), 18-31 moss (14). Good.
+
+Row21 same.
+
+Row22 same.
+
+Row23: 0-12 moss (13), col13 shade, 14-17 stem, col18 shade, 19-31 moss (13).
+
+Rows24-27 same as row23.
+
+Rows28-31 all moss.
+
+Now produce each row text.
+
+I'll write them sequentially.
+
+Let's start constructing rows.
+
+Row0: as above.
+
+Row1: same.
+
+Row2: we have line:
+
+00104A 00104A 00104A 00104A 00104A FFFFFFF 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row3: sky.
+
+Row3 line same as row0.
+
+Row4 same.
+
+Row5 line with star at col12.
+
+Recall indices 0-11 sky, index12 star. Let's produce.
+
+We'll write 12 sky tokens:
+
+Indices 0-11: 12 tokens. Then star token then remaining 19 sky tokens.
+
+Row5 line:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A FFFFFFF 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row6 sky.
+
+Row7 star at col25.
+
+We need 25 sky tokens (0-24). Then star, then 6 sky.
+
+Row7 line:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A FFFFFF 00104A 00104A 00104A 00104A 00104A 00104A
+
+Check count: Let's count tokens: I listed 25 sky before star? Actually I wrote 25 before star? Let's count: I wrote sky token 25 times? Let's count quickly: I can trust but ensure 25.
+
+Indices list: I'll count the sequence: tokens before star:
+
+1 00104A
+2 00104A
+3 00104A
+4 00104A
+5 00104A
+6 00104A
+7 00104A
+8 00104A
+9 00104A
+10 00104A
+11 00104A
+12 00104A
+13 00104A
+14 00104A
+15 00104A
+16 00104A
+17 00104A
+18 00104A
+19 00104A
+20 00104A
+21 00104A
+22 00104A
+23 00104A
+24 00104A
+25 00104A
+
+Yes 25. Then star token (26), then 6 sky tokens (27-32). I wrote six after star: 00104A repeated 6 (positions 27-32). Good.
+
+Row8 sky.
+
+Row9 sky.
+
+Row10 star at col3.
+
+So tokens: sky sky sky star then rest sky.
+
+Thus row10 line:
+
+00104A 00104A 00104A FFFFFF 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row11 sky.
+
+Row12 sky.
+
+Row13 star at col30.
+
+Tokens: 0-29 sky (30 tokens), col30 star, col31 sky.
+
+Row13 line:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A FFFFFF 00104A
+
+Row14 sky.
+
+Row15 sky.
+
+Row16 cap.
+
+Row16 tokens: 0-10 sky (11), 11-20 cap (10), 21-31 sky (11).
+
+Let's write.
+
+First 11 sky:
+
+00104A repeated 11.
+
+Then 10 cap:
+
+C41E3A repeated 10.
+
+Then 11 sky.
+
+Write line:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Check counts: 11 +10 +11 =32.
+
+Row17: 10 sky, 12 cap, 10 sky.
+
+Line:
+
+00104A repeated 10, then C41E3A repeated 12, then 00104A repeated 10.
+
+Write:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Count: 10 sky, then 12 cap (actually we have 12? Let's count cap tokens: after the 10 skies I wrote maybe 12 cap: sequence from C41E3A (first) list count? I need to verify count: I wrote C41E3A repeated how many times? Let's count tokens after the 10 skies:
+
+Token list after skies:
+
+1 C41E3A
+2 C41E3A
+3 C41E3A
+4 C41E3A
+5 C41E3A
+6 C41E3A
+7 C41E3A
+8 C41E3A
+9 C41E3A
+10 C41E3A
+11 C41E3A
+12 C41E3A
+
+Yes 12. Then 10 sky. Good.
+
+Row18: 9 sky, then positions 9-22 cap except spot at 16.
+
+Let's write tokens sequentially.
+
+Indices 0-8 sky: 9 times.
+
+Indices 9-15 cap (7 tokens). Index 16 spot. Indices 17-22 cap (6 tokens). Then indices 23-31 sky (9 tokens).
+
+Thus list: 9 sky, 7 cap, spot, 6 cap, 9 sky.
+
+Let's write.
+
+First 9 sky:
+
+00104A repeated 9.
+
+Then 7 cap:
+
+C41E3A repeated 7.
+
+Then spot:
+
+FFC0CB
+
+Then 6 cap:
+
+C41E3A repeated 6.
+
+Then 9 sky.
+
+Write line:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A FFC0CB C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Now count: 9 +7 +1 +6 +9 =32. Good.
+
+Row19: same as row17 (10 sky,12 cap,10 sky). Let's produce same line.
+
+Row19 line:
+
+00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A C41E3A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A 00104A
+
+Row20: 0-13 moss (14), 14-17 stem, 18-31 moss (14). Let's write.
+
+First 14 moss tokens:
+
+0A4B33 repeated 14.
+
+Then stem cream 4 times.
+
+Then 14 moss.
+
+Write line:
+
+0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 F5E1C0 F5E1C0 F5E1C0 F5E1C0 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33
+
+Row21 same as Row20.
+
+Row22 same as Row20.
+
+Row23: 0-12 moss (13), col13 shade, 14-17 stem, col18 shade, 19-31 moss (13).
+
+Let's write.
+
+First 13 moss:
+
+0A4B33 repeated 13.
+
+Shade token: E0C9A5.
+
+Stem 4 times: F5E1C0.
+
+Shade token: E0C9A5.
+
+Then 13 moss.
+
+Write line:
+
+0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 E0C9A5 F5E1C0 F5E1C0 F5E1C0 F5E1C0 E0C9A5 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33 0A4B33
+
+Rows24-27 same as Row23.
+
+Row28-31 all moss.
+
+Row28 line: 32 moss.
+
+Similarly Row29,30,31.
+
+Now we need to ensure we have exactly 32 lines.
+
+Let's list them in order:
+
+1 Row0
+2 Row1
+3 Row2
+4 Row3
+5 Row4
+6 Row5
+7 Row6
+8 Row7
+9 Row8
+10 Row9
+11 Row10
+12 Row11
+13 Row12
+14 Row13
+15 Row14
+16 Row15
+17 Row16
+18 Row17
+19 Row18
+20 Row19
+21 Row20
+22 Row21
+23 Row22
+24 Row23
+25 Row24
+26 Row25
+27 Row26
+28 Row27
+29 Row28
+30 Row29
+31 Row30
+32 Row31
+
+We need to write rows 24-27 (same as Row23). That's rows 24,25,26,27.
+
+Rows 28-31 moss lines.
+
+Now we must produce final output containing exactly these lines.
+
+Let's assemble each line sequentially.
+
+I'll now write the final answer with all lines.
