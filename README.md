@@ -15,7 +15,3 @@ python3 render.py drawings/fable/lighthouse.txt
 python3 run_models.py            # needs OPENROUTER_API_KEY
 python3 make_gif.py
 ```
-
-Reasoning effort is shown next to each model. Opus 5 and Fable 5.1 drew at
-medium; the other three ran at their OpenRouter default, which the models
-endpoint reports as `high` for DeepSeek and `max` for GLM and Kimi.
