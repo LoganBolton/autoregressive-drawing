@@ -1,104 +1,135 @@
 #!/usr/bin/env python3
 """Animate the drawings being written one pixel at a time, as a GIF.
 
-Two rows (one per model), four columns (one per subject). Every canvas fills
-in simultaneously in reading order — exactly the order the pixels were emitted —
-then the finished frame holds so the viewer can look.
+One row per model, one column per subject. Every canvas fills in at once, in
+reading order — the order the pixels were actually emitted — and then the
+finished frame holds so the viewer can look at the results.
 
     python3 make_gif.py out/showcase.gif
 """
 
 import argparse
 import pathlib
+from typing import NamedTuple, Optional
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from render import read_grid
 
+GRID = 32                 # canvas is GRID x GRID pixels
+NPIX = GRID * GRID
 SUBJECTS = ["lighthouse", "sunflower", "mushroom", "beach"]
+LOGOS = pathlib.Path("assets/logos")
+
+
+class Row(NamedTuple):
+    label: str
+    folder: pathlib.Path
+    logo: pathlib.Path
+    subtitle: Optional[str] = None   # optional italic second line
+
+
 ROWS = [
-    ("Opus 5 (Medium)", pathlib.Path("drawings/opus")),
-    ("Fable 5.1 (Medium)", pathlib.Path("drawings/fable")),
+    Row("Opus 5 (Medium)", pathlib.Path("drawings/opus"),
+        LOGOS / "anthropic.png", "(Maybe Opus 5.2?)"),
+    Row("Fable 5.1 (Medium)", pathlib.Path("drawings/fable"),
+        LOGOS / "anthropic.png"),
+    Row("DeepSeek V4.1 Flash (High)", pathlib.Path("drawings/deepseek-v4.1-flash"),
+        LOGOS / "deepseek.png"),
+    Row("GLM 5.3 Flash (Max)", pathlib.Path("drawings/glm-5.3-flash"),
+        LOGOS / "zai.png"),
+    Row("Kimi K3 (Max)", pathlib.Path("drawings/kimi-k3"),
+        LOGOS / "moonshot.png"),
 ]
+NROWS = len(ROWS)
 
 # Layout
-SCALE = 10                # 32px grid -> 320px tile
-TILE = 32 * SCALE
-GAP_X = 44
-GAP_Y = 64
-MARGIN_X = 48
-LABEL_W = 340             # room for the row label on the left
-TOP = 80
-BOTTOM = 80
+SCALE = 8                 # one drawing pixel -> SCALE x SCALE screen pixels
+TILE = GRID * SCALE
+GAP_X, GAP_Y = 36, 44
+MARGIN_X = 44
+LABEL_W = 470             # room for the logo and row label on the left
+TOP = BOTTOM = 56
+LOGO_H = 42               # logos scale to this height, then left-align
+LOGO_GAP = 16             # space between logo and label
 W = MARGIN_X + LABEL_W + 4 * TILE + 3 * GAP_X + MARGIN_X
-H = TOP + 2 * TILE + GAP_Y + BOTTOM
+H = TOP + NROWS * TILE + (NROWS - 1) * GAP_Y + BOTTOM
 
 # Palette
 BG = (255, 255, 255)
-EMPTY = (240, 240, 242)   # undrawn pixel
+EMPTY = (240, 240, 242)   # a pixel that has not been drawn yet
 FG = (24, 24, 28)
-ACCENT = (255, 184, 28)   # current-pixel cursor
+MUTED = (122, 122, 132)   # the italic second line
+ACCENT = (255, 184, 28)   # underline, and the cursor on the current pixel
 
-FONT_DIR = "/System/Library/Fonts/HelveticaNeue.ttc"
+FONT_FILE = "/System/Library/Fonts/HelveticaNeue.ttc"
+FACES = {"regular": 0, "bold": 1, "italic": 2}   # indexes within that collection
 
 
-def font(size, bold=False):
-    # index 1 is the Bold face in the HelveticaNeue collection on macOS
+def font(size, face="regular"):
     try:
-        return ImageFont.truetype(FONT_DIR, size, index=1 if bold else 0)
+        return ImageFont.truetype(FONT_FILE, size, index=FACES[face])
     except OSError:
         return ImageFont.load_default()
 
 
 def tile_origin(row, col):
-    x = MARGIN_X + LABEL_W + col * (TILE + GAP_X)
-    y = TOP + row * (TILE + GAP_Y)
-    return x, y
+    """Top-left corner of one drawing's tile."""
+    return (MARGIN_X + LABEL_W + col * (TILE + GAP_X),
+            TOP + row * (TILE + GAP_Y))
 
 
 def load_grids():
-    grids = []
-    for _, folder in ROWS:
-        grids.append([np.array(read_grid(folder / f"{s}.txt"), dtype=np.uint8) for s in SUBJECTS])
-    return grids
+    """All grids as arrays, indexed [row][column]."""
+    return [[np.array(read_grid(r.folder / f"{s}.txt"), dtype=np.uint8) for s in SUBJECTS]
+            for r in ROWS]
+
+
+def draw_label(img, d, row, y):
+    """One row's logo, name, underline and optional italic second line."""
+    mid = y + TILE / 2
+
+    logo = Image.open(row.logo).convert("RGBA")
+    logo.thumbnail((LOGO_H * 3, LOGO_H), Image.LANCZOS)
+    # paste through its own alpha so the mark sits on the page, not in a box
+    img.paste(logo, (MARGIN_X, int(mid - logo.height / 2)), logo)
+
+    x = MARGIN_X + logo.width + LOGO_GAP
+    # lift a two-line label so the whole block stays centred against its row
+    dy = -17 if row.subtitle else 0
+    name_font = font(28, "bold")
+    d.text((x, mid - 19 + dy), row.label, font=name_font, fill=FG)
+    d.rectangle([x, mid + 20 + dy,
+                 x + d.textlength(row.label, font=name_font), mid + 23 + dy], fill=ACCENT)
+    if row.subtitle:
+        d.text((x, mid + 31 + dy), row.subtitle, font=font(22, "italic"), fill=MUTED)
 
 
 def chrome():
-    """Static background: row labels and empty canvases."""
+    """The parts that never change: labels and empty canvases."""
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-
-    for r, (name, _) in enumerate(ROWS):
-        _, y = tile_origin(r, 0)
-        f = font(34, bold=True)
-        d.text((MARGIN_X, y + TILE / 2 - 22), name, font=f, fill=FG)
-        # small accent underline to mark the model row
-        tw = d.textlength(name, font=f)
-        d.rectangle([MARGIN_X, y + TILE / 2 + 24, MARGIN_X + tw, y + TILE / 2 + 27], fill=ACCENT)
-
-    for r in range(2):
-        for c in range(4):
+    for r, row in enumerate(ROWS):
+        draw_label(img, d, row, tile_origin(r, 0)[1])
+        for c in range(len(SUBJECTS)):
             x, y = tile_origin(r, c)
             d.rectangle([x, y, x + TILE - 1, y + TILE - 1], fill=EMPTY)
     return img
 
 
 def frame_at(base, grids, n, cursor=True):
-    """Frame with the first n pixels (reading order) drawn on every canvas."""
-    img = base.copy()
-    arr = np.array(img)
-    for r in range(2):
-        for c in range(4):
-            g = grids[r][c]
+    """A frame with the first n pixels drawn on every canvas."""
+    arr = np.array(base)
+    for r in range(NROWS):
+        for c in range(len(SUBJECTS)):
             x0, y0 = tile_origin(r, c)
-            full = np.full((32, 32, 3), EMPTY, dtype=np.uint8)
-            flat = full.reshape(-1, 3)
-            flat[:n] = g.reshape(-1, 3)[:n]
-            big = np.kron(full, np.ones((SCALE, SCALE, 1), dtype=np.uint8))
-            arr[y0:y0 + TILE, x0:x0 + TILE] = big
-            if cursor and 0 < n < 1024:
-                py, px = divmod(n, 32)
+            canvas = np.full((GRID, GRID, 3), EMPTY, dtype=np.uint8)
+            canvas.reshape(-1, 3)[:n] = grids[r][c].reshape(-1, 3)[:n]
+            arr[y0:y0 + TILE, x0:x0 + TILE] = np.kron(
+                canvas, np.ones((SCALE, SCALE, 1), dtype=np.uint8))
+            if cursor and 0 < n < NPIX:
+                py, px = divmod(n, GRID)
                 cy, cx = y0 + py * SCALE, x0 + px * SCALE
                 arr[cy:cy + SCALE, cx:cx + SCALE] = ACCENT
     return Image.fromarray(arr)
@@ -109,29 +140,31 @@ def main():
     p.add_argument("out", type=pathlib.Path, nargs="?", default=pathlib.Path("out/showcase.gif"))
     p.add_argument("--step", type=int, default=6, help="pixels drawn per frame")
     p.add_argument("--ms", type=int, default=40, help="frame duration in ms")
-    p.add_argument("--hold", type=int, default=10000, help="final hold in ms")
+    p.add_argument("--hold", type=int, default=20000, help="final hold in ms")
     p.add_argument("--lead", type=int, default=800, help="empty-canvas lead-in in ms")
     args = p.parse_args()
 
     grids = load_grids()
     base = chrome()
 
-    frames, durations = [], []
-    frames.append(frame_at(base, grids, 0, cursor=False)); durations.append(args.lead)
-    for n in range(args.step, 1024, args.step):
-        frames.append(frame_at(base, grids, n)); durations.append(args.ms)
-    frames.append(frame_at(base, grids, 1024, cursor=False)); durations.append(args.hold)
+    frames = [frame_at(base, grids, 0, cursor=False)]
+    durations = [args.lead]
+    for n in range(args.step, NPIX, args.step):
+        frames.append(frame_at(base, grids, n))
+        durations.append(args.ms)
+    frames.append(frame_at(base, grids, NPIX, cursor=False))
+    durations.append(args.hold)
 
-    # One shared palette built from the finished frame keeps colors stable
-    # across the animation instead of flickering per-frame.
-    ref = frames[-1].quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
-    q = [f.quantize(palette=ref, dither=Image.Dither.NONE) for f in frames]
+    # One palette taken from the finished frame and reused everywhere, so colors
+    # stay put instead of flickering as each frame is quantized on its own.
+    ref = frames[-1].quantize(colors=256, method=Image.Quantize.MEDIANCUT,
+                              dither=Image.Dither.NONE)
+    quantized = [f.quantize(palette=ref, dither=Image.Dither.NONE) for f in frames]
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    q[0].save(args.out, save_all=True, append_images=q[1:], duration=durations,
-              loop=0, optimize=False, disposal=1)
-    total = sum(durations) / 1000
-    print(f"{W}x{H}, {len(frames)} frames, {total:.1f}s -> {args.out} "
+    quantized[0].save(args.out, save_all=True, append_images=quantized[1:],
+                      duration=durations, loop=0, optimize=False, disposal=1)
+    print(f"{W}x{H}, {len(frames)} frames, {sum(durations) / 1000:.1f}s -> {args.out} "
           f"({args.out.stat().st_size / 1e6:.1f} MB)")
 
 
